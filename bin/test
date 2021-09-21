@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+bin/fmt
+deno test -A

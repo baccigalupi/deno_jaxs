@@ -1,0 +1,3 @@
+#! /bin/zsh
+
+deno bundle client/workbook.jsx public/js/workbook.js --config deno.json --watch

@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+bin/bundle
+deno run -A server/start.ts

@@ -1,0 +1,3 @@
+#! /bin/zsh
+
+deno lint --config ./deno.json
