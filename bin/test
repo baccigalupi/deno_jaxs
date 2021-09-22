@@ -1,4 +1,4 @@
 #! /bin/zsh
 
 bin/fmt
-deno test -A
+deno test -A --config deno.json $1
