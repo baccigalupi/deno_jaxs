@@ -3,7 +3,7 @@
 type Component = any;
 
 interface MatchableRoute {
-  match(path: string): boolean
+  match(path: string): boolean;
 }
 
 class ExactRoute implements MatchableRoute {
@@ -16,7 +16,7 @@ class ExactRoute implements MatchableRoute {
   }
 
   match(path: string): boolean {
-    return this.path.trim() === path.trim()
+    return this.path.trim() === path.trim();
   }
 }
 
@@ -68,7 +68,7 @@ export class Routes {
     const matched = this.collection.find((route: Route) => {
       return route.match(path);
     });
-    
+
     return matched || this.defaultRoute;
   }
 }

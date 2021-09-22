@@ -1,17 +1,10 @@
-import { JSDOM } from 'jsdom';
-import sinon from 'sinon';
-import { isArray } from '../../lib/utilities/array';
+import { DOMParser, Element } from "https://deno.land/x/deno_dom/deno-dom-wasm.ts";
+import { isArray } from '../../lib/utilities/array.js';
 
 const defaultContent = '<div id=\'app\'></div>';
 
-let currentDom;
-
 export const createTestDom = (content = defaultContent) => {
-  const dom = new JSDOM(`<!DOCTYPE html><body>${content}<body>`, {
-    url: 'http://localhost',
-  });
-  currentDom = dom;
-  return dom.window.document;
+  return new DOMParser().parseFromString(`<!DOCTYPE html><body>${content}<body>`, "text/html");
 };
 
 export const domToString = (element) => {
@@ -22,18 +15,10 @@ export const domToString = (element) => {
 };
 
 const wrapElements = (elements) => {
-  const document = currentDom.window.document;
+  const document = createTestDom();
   const wrapper = document.createElement('div');
   elements.forEach((element) => {
     wrapper.append(element);
   });
   return wrapper;
-};
-
-export const mockEvent = (target) => {
-  return {
-    preventDefault: sinon.fake(),
-    stopPropagation: sinon.fake(),
-    target,
-  };
 };
