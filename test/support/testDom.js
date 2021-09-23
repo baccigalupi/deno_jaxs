@@ -1,8 +1,5 @@
-import {
-  DOMParser,
-  Element,
-} from 'https://deno.land/x/deno_dom/deno-dom-wasm.ts';
-import { isArray } from '../../lib/utilities/array.js';
+import { DOMParser } from 'https://deno.land/x/deno_dom/deno-dom-wasm.ts';
+import { isArray } from '../../lib/utilities/array.ts';
 
 const defaultContent = '<div id=\'app\'></div>';
 

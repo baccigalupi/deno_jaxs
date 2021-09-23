@@ -1,6 +1,7 @@
 export const isArray = Array.isArray;
 
-export const ensureArray = (children) => {
+// deno-lint-ignore no-explicit-any
+export const ensureArray = (children: any) => {
   if (isArray(children)) {
     return children;
   }

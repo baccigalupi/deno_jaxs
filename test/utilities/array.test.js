@@ -1,5 +1,5 @@
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
-import { ensureArray, isArray } from '../../lib/utilities/array.js';
+import { ensureArray, isArray } from '../../lib/utilities/array.ts';
 
 Deno.test('Utilities, array: isArray will check whether its an array', () => {
   assertEquals(isArray(''), false);
