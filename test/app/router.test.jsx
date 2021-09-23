@@ -1,33 +1,33 @@
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
-import routes from '../../lib/app/routes.ts';
+import router from '../../lib/app/router.ts';
 
 Deno.test('Routes: Routes: starts as empty', () => {
-  const pages = routes();
+  const pages = router();
   assertEquals(pages.getRoute('/'), undefined);
 });
 
 Deno.test('Routes: getting a route will return a default when no match and default is configured', () => {
   const NotFound = () => <h1>Nope, not here!</h1>;
-  const pages = routes().addDefault(NotFound);
+  const pages = router().addDefault(NotFound);
   assertEquals(pages.getRoute('/').component, NotFound);
   assertEquals(pages.getRoute('/ueaumr-chaeud').component, NotFound);
 });
 
-Deno.test('Routes: finds routes by exact patch', () => {
+Deno.test('Routes: finds router by exact patch', () => {
   const Hello = () => <h1>Hi!</h1>;
-  const pages = routes().addPath('/hello', Hello);
+  const pages = router().addPath('/hello', Hello);
   assertEquals(pages.getRoute('/'), undefined);
   assertEquals(pages.getRoute('/hello').component, Hello);
   assertEquals(pages.getRoute('/hellow'), undefined);
 });
 
-Deno.test('Routes: finds routes by regex, and provides matcher information', () => {
+Deno.test('Routes: finds router by regex, and provides matcher information', () => {
   const Hello = () => <h1>Hi!</h1>;
   const NotFound = () => <h1>Nope, not here!</h1>;
 
-  const pages = routes()
+  const pages = router()
     .addMatcher(/^\/(hello|hi)(.*)/, Hello)
     .addDefault(NotFound);
 
@@ -49,14 +49,14 @@ Deno.test('Routes: returns the first match', () => {
   const Hello = () => <h1>Hi!</h1>;
   const High = () => <h1>Jump</h1>;
 
-  let pages = routes()
+  let pages = router()
     .addMatcher(/^\/(hello|hi)(.*)/, Hello)
     .addPath('/high', High);
 
   assertEquals(pages.getRoute('/hi').component, Hello);
   assertEquals(pages.getRoute('/high').component, Hello);
 
-  pages = routes()
+  pages = router()
     .addPath('/high', High)
     .addMatcher(/^\/(hello|hi)(.*)/, Hello);
 
@@ -68,7 +68,7 @@ Deno.test('Routes: uses the default only if there are not other matches', () => 
   const Hello = () => <h1>Hi!</h1>;
   const NotFound = () => <h1>Nope, not here!</h1>;
 
-  const pages = routes()
+  const pages = router()
     .addDefault(NotFound)
     .addMatcher(/^\/(hello|hi)(.*)/, Hello);
 

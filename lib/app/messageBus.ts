@@ -1,26 +1,24 @@
-type WarnLogger = (message: string) => void;
-type MaybeWarnLogger = WarnLogger | undefined;
-// deno-lint-ignore no-explicit-any
-type Publisher = (eventName: string, payload: any) => void;
-// deno-lint-ignore no-explicit-any
-type Listener = (payload: any, eventName: string, publisher: Publisher) => void;
-type FuzzyListener = { matcher: RegExp; listener: Listener };
-type EventMatcher = RegExp | string;
-type MessageBusOptions = { warn: MaybeWarnLogger };
+import {
+  BusEventMatcher,
+  BusFuzzyListener,
+  BusInitializeOptions,
+  BusListener,
+  MaybeBusLogger,
+} from '../types.ts';
 
 export class MessageBus {
-  warn: MaybeWarnLogger;
-  fuzzyListeners: Array<FuzzyListener>;
-  exactListeners: Record<string, Array<Listener>>;
+  warn: MaybeBusLogger;
+  fuzzyListeners: Array<BusFuzzyListener>;
+  exactListeners: Record<string, Array<BusListener>>;
 
-  constructor(options: MessageBusOptions) {
+  constructor(options: BusInitializeOptions) {
     const { warn } = options;
     this.warn = warn;
     this.fuzzyListeners = [];
     this.exactListeners = {};
   }
 
-  subscribe(eventMatcher: EventMatcher, listener: Listener): void {
+  subscribe(eventMatcher: BusEventMatcher, listener: BusListener): void {
     if (typeof eventMatcher === 'string') {
       this.subscribeExactListeners(eventMatcher, listener);
     } else {
@@ -28,12 +26,12 @@ export class MessageBus {
     }
   }
 
-  subscribeExactListeners(eventMatcher: string, listener: Listener): void {
+  subscribeExactListeners(eventMatcher: string, listener: BusListener): void {
     this.exactListeners[eventMatcher] = this.exactListeners[eventMatcher] || [];
     this.exactListeners[eventMatcher].push(listener);
   }
 
-  subscribeFuzzyListerers(matcher: RegExp, listener: Listener): void {
+  subscribeFuzzyListerers(matcher: RegExp, listener: BusListener): void {
     this.fuzzyListeners.push({ matcher, listener });
   }
 
@@ -57,7 +55,7 @@ export class MessageBus {
   publishFuzzyListeners(eventName: string, payload: any): boolean {
     let published = false;
 
-    this.fuzzyListeners.forEach(({ matcher, listener }: FuzzyListener) => {
+    this.fuzzyListeners.forEach(({ matcher, listener }: BusFuzzyListener) => {
       if (eventName.match(matcher)) {
         published = true;
         listener(payload, eventName, this.publish.bind(this));
@@ -76,6 +74,6 @@ export class MessageBus {
 
 const defaultOptions = { warn: undefined };
 
-export default (options: MessageBusOptions = defaultOptions) => {
+export default (options: BusInitializeOptions = defaultOptions) => {
   return new MessageBus(options);
 };

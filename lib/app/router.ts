@@ -1,26 +1,24 @@
-// deno-lint-ignore-file no-explicit-any
-// TODO: addd Component or Template type where any exists now
-type Component = any;
+import { Component, Route, RouteCollection } from '../types.ts';
 
-interface MatchableRoute {
-  match(path: string): boolean;
-}
-
-class ExactRoute implements MatchableRoute {
-  path: string;
+class ExactRoute implements Route {
+  matcher: string;
   component: Component;
 
   constructor(path: string, component: Component) {
-    this.path = path;
+    this.matcher = path;
     this.component = component;
   }
 
   match(path: string): boolean {
-    return this.path.trim() === path.trim();
+    return this.matcher.trim() === path.trim();
+  }
+
+  matches(path: string): Array<string> {
+    return [path.trim()];
   }
 }
 
-class FuzzyRoute implements MatchableRoute {
+class FuzzyRoute implements Route {
   matcher: RegExp;
   component: Component;
 
@@ -38,10 +36,7 @@ class FuzzyRoute implements MatchableRoute {
   }
 }
 
-type Route = ExactRoute | FuzzyRoute;
-type RouteCollection = Array<Route>;
-
-export class Routes {
+export class Router {
   collection: RouteCollection;
   defaultRoute: Component | undefined;
 
@@ -49,17 +44,17 @@ export class Routes {
     this.collection = [];
   }
 
-  addPath(path: string, component: Component): Routes {
+  addPath(path: string, component: Component): Router {
     this.collection.push(new ExactRoute(path, component));
     return this;
   }
 
-  addMatcher(matcher: RegExp, component: Component): Routes {
+  addMatcher(matcher: RegExp, component: Component): Router {
     this.collection.push(new FuzzyRoute(matcher, component));
     return this;
   }
 
-  addDefault(component: Component): Routes {
+  addDefault(component: Component): Router {
     this.defaultRoute = new FuzzyRoute(/.*/, component);
     return this;
   }
@@ -73,5 +68,5 @@ export class Routes {
   }
 }
 
-const routes = () => new Routes();
-export default routes;
+const router = () => new Router();
+export default router;
