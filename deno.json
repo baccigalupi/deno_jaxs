@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react",
     "jsxFactory": "jsx",
-    "jsxFragmentFactory": "jsx",
+    "jsxFragmentFactory": "jsx.fragment",
     "lib": [
       "dom",
       "deno.ns",
