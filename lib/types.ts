@@ -27,3 +27,18 @@ export interface Route {
 }
 
 export type RouteCollection = Array<Route>;
+
+// Templates ------
+export type RenderKit = {
+  document: Document;
+};
+
+export type TemplateDom = Text | Element;
+
+export interface Template {
+  dom: TemplateDom | undefined;
+  render: (renderKit: RenderKit) => TemplateDom;
+  rerender: (renderKit: RenderKit) => TemplateDom;
+  removeDom: () => void;
+  removeListeners: () => void;
+}

@@ -1,15 +1,12 @@
-import TextTemplate from '../../lib/templates/Text';
+import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
-import { assert } from 'chai';
+import TextTemplate from '../../lib/templates/Text.ts';
+import { createTestDom } from '../support/testDom.js';
 
-import { createTestDom } from '../support/testDom';
+Deno.test('Templates, Text: renders a dom text node', () => {
+  const document = createTestDom();
+  const template = new TextTemplate('Hello World');
 
-describe('Text Templates', () => {
-  it('renders a dom text node', () => {
-    const document = createTestDom();
-    const template = new TextTemplate('Hello World');
-
-    const node = template.render({ document });
-    assert.equal(node.data, 'Hello World');
-  });
+  const node = template.render({ document });
+  assertEquals(node.data, 'Hello World');
 });
