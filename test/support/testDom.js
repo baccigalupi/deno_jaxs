@@ -21,7 +21,7 @@ const wrapElements = (elements) => {
   const document = createTestDom();
   const wrapper = document.createElement('div');
   elements.forEach((element) => {
-    wrapper.append(element);
+    wrapper.appendChild(element);
   });
   return wrapper;
 };
