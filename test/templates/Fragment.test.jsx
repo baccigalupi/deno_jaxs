@@ -1,4 +1,7 @@
-import { assertEquals, assertStringIncludes } from 'https://deno.land/std/testing/asserts.ts';
+import {
+  assertEquals,
+  assertStringIncludes,
+} from 'https://deno.land/std/testing/asserts.ts';
 import jsx from '../../lib/jsx.js';
 
 import { createTestDom, domToString } from '../support/testDom.js';
