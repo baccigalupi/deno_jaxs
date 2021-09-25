@@ -5,7 +5,7 @@ import {
   attachHistoryListener,
   navigate,
 } from '../../lib/handlers/navigation.js';
-import events from '../../lib/store/events.js';
+import events from '../../lib/store/events.ts';
 
 import { createTestDom } from '../support/testDom.js';
 

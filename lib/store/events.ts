@@ -1,8 +1,8 @@
-export const createEvent = (name) => {
+export const createEvent = (name: string) => {
   return { [name]: name };
 };
 
-export const storeEvent = (name) => {
+export const storeEvent = (name: string) => {
   const eventName = `store:${name}`;
   return { [name]: eventName };
 };
