@@ -1,72 +1,110 @@
-import reducer from '../../lib/reducers/location';
+import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
-import { assert } from 'chai';
+import {
+  locationChanged,
+  normalizeHash,
+  queryParams,
+} from '../../lib/reducers/location.js';
 
-describe('location reducer', () => {
-  afterEach(() => {
-    global.location = undefined;
+// NOTE: location can't be mocked in Deno in a reasonable way, so this tests the utility functions
+// around the reducer.
+
+Deno.test('Reducers, location: parses query params', () => {
+  assertEquals(queryParams('?foo=bar&zardoz=false'), {
+    foo: 'bar',
+    zardoz: 'false',
   });
+});
 
-  it('builds an initial state from the global location', () => {
-    global.location = {
-      hash: '',
-      pathname: '/',
-      search: '',
-    };
+Deno.test('Reducers, location: extracts the hash', () => {
+  assertEquals(normalizeHash('#pound'), 'pound');
+});
 
-    const state = reducer();
-    assert.deepEqual(state, {
-      hash: '',
-      path: '/',
-      queryParams: {},
-    });
-  });
+Deno.test('Reducers, location: location changed is true if the path changes', () => {
+  const originalState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
 
-  it('parses query params', () => {
-    global.location = {
-      hash: '',
-      pathname: '/',
-      search: '?foo=bar&zardoz=false',
-    };
+  const newState = {
+    hash: '#pound',
+    path: '/new-path',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
 
-    const state = reducer();
-    assert.deepEqual(state, {
-      hash: '',
-      path: '/',
-      queryParams: {
-        foo: 'bar',
-        zardoz: 'false',
-      },
-    });
-  });
+  assertEquals(locationChanged(originalState, newState), true);
+});
 
-  it('extracts the hash', () => {
-    global.location = {
-      hash: '#pound',
-      pathname: '/',
-      search: '',
-    };
+Deno.test('Reducers, location: location changed is true if the query changes', () => {
+  const originalState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
 
-    const state = reducer();
-    assert.deepEqual(state, {
-      hash: 'pound',
-      path: '/',
-      queryParams: {},
-    });
-  });
+  const newState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'true',
+      something: 'else',
+    },
+  };
 
-  it('renames the pathname to path', () => {
-    global.location = {
-      hash: '',
-      pathname: '/goodbye/zardoz',
-      search: '',
-    };
+  assertEquals(locationChanged(originalState, newState), true);
+});
 
-    const state = reducer();
-    assert.deepEqual(state, {
-      hash: '',
-      path: '/goodbye/zardoz',
-      queryParams: {},
-    });
-  });
+Deno.test('Reducers, location: location changed is true if the hash changes', () => {
+  const originalState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
+
+  const newState = {
+    hash: '#pounder',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
+
+  assertEquals(locationChanged(originalState, newState), true);
+});
+
+Deno.test('Reducers, location: location changed is false if nothing changed', () => {
+  const originalState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
+
+  const newState = {
+    hash: '#pound',
+    path: '/',
+    queryParams: {
+      foo: 'bar',
+      zardoz: 'false',
+    },
+  };
+
+  assertEquals(locationChanged(originalState, newState), false);
 });

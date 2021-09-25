@@ -1,70 +1,57 @@
-import { attachHistoryListener, navigate } from '../../lib/handlers/navigation';
-import events from '../../lib/store/events';
+import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
+import { spy } from 'https://deno.land/x/mock@v0.10.0/spy.ts';
 
-import { assert } from 'chai';
-import sinon from 'sinon';
-import { createTestDom } from '../support/testDom';
+import {
+  attachHistoryListener,
+  navigate,
+} from '../../lib/handlers/navigation.js';
+import events from '../../lib/store/events.js';
 
-describe('handlers navigation', () => {
-  describe('navigate', () => {
-    beforeEach(() => {
-      global.history = {
-        pushState: sinon.fake(),
-      };
-    });
+import { createTestDom } from '../support/testDom.js';
 
-    afterEach(() => {
-      global.history = undefined;
-    });
+const setupHistory = () => {
+  globalThis.history = {
+    pushState: spy(),
+  };
+};
 
-    it('navigate pushes history', () => {
-      const publish = sinon.fake();
-      const path = '/foo/bar';
+const clearHistory = () => globalThis.history = undefined;
 
-      navigate(publish, path);
-
-      assert.equal(history.pushState.lastArg, path);
-    });
-
-    it('publishes the right event', () => {
-      const publish = sinon.fake();
-      const path = '/foo/bar';
-
-      navigate(publish, path);
-
-      assert.equal(publish.firstArg, events.store.updateLocation);
-    });
-  });
-
-  describe('attachHistoryListener', () => {
-    let originalWindow;
-
-    beforeEach(() => {
-      originalWindow = global.window;
-    });
-
-    afterEach(() => {
-      global.window = originalWindow;
-    });
-
-    it('publishes navigation events when they occur on the window', (done) => {
-      const publish = sinon.fake();
-      const document = createTestDom();
-      global.window = document.defaultView;
-      attachHistoryListener(publish);
-      window.history.pushState({}, null, '/home');
-      window.history.pushState({}, null, '/next-page');
-      window.history.back();
-
-      // This setTimeout is a bit of a hack, process.nextTick doesn't provide
-      // enough time, and unlike other async things, we don't have a handle on
-      // the callback/promise. We could subscribe to the event to verify
-      // instead.
-      setTimeout(() => {
-        assert.equal(publish.callCount, 1);
-        assert.equal(publish.firstArg, events.store.updateLocation);
-        done();
-      }, 20);
-    });
-  });
+Deno.test('handlers, navigation: navigate pushes history', () => {
+  setupHistory();
+  const publish = spy();
+  const path = '/foo/bar';
+  navigate(publish, path);
+  assertEquals(history.pushState.calls[0].args[2], path);
+  clearHistory();
 });
+
+Deno.test('handlers, navigation: navigate publishes the right event', () => {
+  setupHistory();
+  const publish = spy();
+  const path = '/foo/bar';
+  navigate(publish, path);
+  console.log(publish.calls);
+  assertEquals(publish.calls[0].args[0], events.store.updateLocation);
+  clearHistory();
+});
+
+// TODO: more deno_dom fail, no popstate stuff, move to headless browser
+// Deno.test('handlers, navigation: attachHistoryListener publishes navigation events when they occur on the window', () => {
+//   const publish = spy();
+//   const document = createTestDom();
+//   window.onpopstate = document.defaultView.onpopstate;
+//   attachHistoryListener(publish);
+//   window.history.pushState({}, null, '/home');
+//   window.history.pushState({}, null, '/next-page');
+//   window.history.back();
+
+//   // This setTimeout is a bit of a hack, process.nextTick doesn't provide
+//   // enough time, and unlike other async things, we don't have a handle on
+//   // the callback/promise. We could subscribe to the event to verify
+//   // instead.
+//   assert.equal(publish.calls.length, 1);
+//   assert.equal(publish.calls[0].args[0], events.store.updateLocation);
+
+//   window.onpopstate = undefined;
+// });
