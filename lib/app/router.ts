@@ -1,10 +1,10 @@
-import { Component, Route, RouteCollection } from '../types.ts';
+import { Route, RouteCollection, Template } from '../types.ts';
 
 class ExactRoute implements Route {
   matcher: string;
-  component: Component;
+  component: Template;
 
-  constructor(path: string, component: Component) {
+  constructor(path: string, component: Template) {
     this.matcher = path;
     this.component = component;
   }
@@ -20,9 +20,9 @@ class ExactRoute implements Route {
 
 class FuzzyRoute implements Route {
   matcher: RegExp;
-  component: Component;
+  component: Template;
 
-  constructor(matcher: RegExp, component: Component) {
+  constructor(matcher: RegExp, component: Template) {
     this.matcher = matcher;
     this.component = component;
   }
@@ -38,23 +38,23 @@ class FuzzyRoute implements Route {
 
 export class Router {
   collection: RouteCollection;
-  defaultRoute: Component | undefined;
+  defaultRoute: Route | undefined;
 
   constructor() {
     this.collection = [];
   }
 
-  addPath(path: string, component: Component): Router {
+  addPath(path: string, component: Template): Router {
     this.collection.push(new ExactRoute(path, component));
     return this;
   }
 
-  addMatcher(matcher: RegExp, component: Component): Router {
+  addMatcher(matcher: RegExp, component: Template): Router {
     this.collection.push(new FuzzyRoute(matcher, component));
     return this;
   }
 
-  addDefault(component: Component): Router {
+  addDefault(component: Template): Router {
     this.defaultRoute = new FuzzyRoute(/.*/, component);
     return this;
   }

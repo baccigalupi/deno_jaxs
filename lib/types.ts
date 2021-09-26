@@ -14,14 +14,9 @@ export type BusInitializeOptions = { warn: MaybeBusLogger };
 export type BusEventMatcher = RegExp | string;
 
 // Router ------
-
-// TODO: add real Component or Template type when we get there
-// deno-lint-ignore no-explicit-any
-export type Component = any;
-
 export interface Route {
   matcher: RegExp | string;
-  component: Component;
+  component: Template;
   match(path: string): boolean;
   matches(path: string): Array<string>;
 }
@@ -42,3 +37,10 @@ export interface Template {
   removeDom: () => void;
   removeListeners: () => void;
 }
+
+// deno-lint-ignore no-explicit-any
+export type Attributes = Record<string, any>;
+export type AttributesAndEvents = {
+  attributes: Attributes;
+  events: Attributes;
+};

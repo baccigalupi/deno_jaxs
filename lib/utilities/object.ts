@@ -1,9 +1,4 @@
-// deno-lint-ignore no-explicit-any
-type Attributes = Record<string, any>;
-type AttributesAndEvents = {
-  attributes: Attributes;
-  events: Attributes;
-};
+import { Attributes, AttributesAndEvents } from '../types.ts';
 
 export const cloneWithDefaults = (
   rawAttributes: Attributes,
