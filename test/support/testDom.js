@@ -25,3 +25,5 @@ const wrapElements = (elements) => {
   });
   return wrapper;
 };
+
+export const stripWhiteSpace = (string) => string.replace(/\s{2,}/g, '').trim();

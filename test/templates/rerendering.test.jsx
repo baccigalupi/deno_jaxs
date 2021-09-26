@@ -2,7 +2,11 @@ import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
 import { bind } from '../../lib/templates/Bound.js';
-import { createTestDom, domToString } from '../support/testDom.js';
+import {
+  createTestDom,
+  domToString,
+  stripWhiteSpace,
+} from '../support/testDom.js';
 
 const setupBoundListTemplate = () => {
   const List = ({ items }) => {
@@ -40,14 +44,30 @@ Deno.test('Template, re-rendering: no-op & no changes', () => {
   const document = createTestDom();
   const node = template.render({ document, state });
   assertEquals(
-    domToString(node),
-    '<div><h1>Todo</h1><ul><li class="backlog">Re-rendering</li><li class="complete">Rendering</li></ul></div>',
+    stripWhiteSpace(domToString(node)),
+    stripWhiteSpace(`
+      <div>
+        <h1>Todo</h1>
+        <ul>
+          <li class="backlog">Re-rendering</li>
+          <li class="complete">Rendering</li>
+        </ul>
+      </div>
+    `),
   );
 
   template.rerender({ document, state });
   assertEquals(
-    domToString(node),
-    '<div><h1>Todo</h1><ul><li class="backlog">Re-rendering</li><li class="complete">Rendering</li></ul></div>',
+    stripWhiteSpace(domToString(node)),
+    stripWhiteSpace(`
+      <div>
+        <h1>Todo</h1>
+        <ul>
+          <li class="backlog">Re-rendering</li>
+          <li class="complete">Rendering</li>
+        </ul>
+      </div>
+    `),
   );
 });
 
