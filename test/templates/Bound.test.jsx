@@ -199,3 +199,22 @@ Deno.test('Templates Bound: willChange returns true if the bound state has a fuz
     true,
   );
 });
+
+Deno.test('Templates Bound: willChange returns true if the bound state has a fuzzy equal array', () => {
+  const document = createTestDom();
+  const originalState = { hello: 'world', list: ['thing, thang'] };
+  const Template = ({ list }) => <h1>Hello {list.join(', ')}!</h1>;
+  const viewModel = (state) => {
+    return {
+      list: state.list,
+    };
+  };
+  const template = new Bound(Template, viewModel, {});
+  template.render({ state: originalState, document });
+  const newState = { hello: 'world', list: ['thing', 'thingy'] }
+  const node  = template.rerender({ state: newState, document });
+  assertEquals(
+    domToString(node),
+    '<li class="nav-item"><a href="/hello-nav-world" class="nav-link active">Hello World</a></li>',
+  );
+});
