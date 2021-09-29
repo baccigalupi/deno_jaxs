@@ -1,7 +1,7 @@
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
-import { bind } from '../../lib/templates/Bound.js';
+import { bind, Bound } from '../../lib/templates/Bound.js';
 
 import { createTestDom, domToString } from '../support/testDom.js';
 
@@ -131,5 +131,71 @@ Deno.test('Templates, Bound: works with both state and props', () => {
   assertEquals(
     domToString(node),
     '<li class="nav-item"><a href="/hello-nav-world" class="nav-link active">Hello World</a></li>',
+  );
+});
+
+Deno.test('Templates Bound: willChange returns false if the bound state is equaL', () => {
+  const document = createTestDom();
+  const originalState = { hello: 'world', list: ['thing, thang'] };
+  const Template = ({ name }) => <h1>Hello {name}!</h1>;
+  const viewModel = (state) => {
+    return {
+      name: state.hello,
+    };
+  };
+  const template = new Bound(Template, viewModel, {});
+  template.render({ state: originalState, document });
+
+  assertEquals(template.willChange({ hello: 'world', list: [] }), false);
+});
+
+Deno.test('Templates Bound: willChange returns true if the bound state not equaL', () => {
+  const document = createTestDom();
+  const originalState = { hello: 'world', list: ['thing, thang'] };
+  const Template = ({ name }) => <h1>Hello {name}!</h1>;
+  const viewModel = (state) => {
+    return {
+      name: state.hello,
+    };
+  };
+  const template = new Bound(Template, viewModel, {});
+  template.render({ state: originalState, document });
+
+  assertEquals(template.willChange({ hello: 'wonk', list: [] }), true);
+});
+
+Deno.test('Templates Bound: willChange returns false if the bound state has an identical array', () => {
+  const document = createTestDom();
+  const originalState = { hello: 'world', list: ['thing, thang'] };
+  const Template = ({ list }) => <h1>Hello {list.join(', ')}!</h1>;
+  const viewModel = (state) => {
+    return {
+      list: state.list,
+    };
+  };
+  const template = new Bound(Template, viewModel, {});
+  template.render({ state: originalState, document });
+
+  assertEquals(
+    template.willChange({ hello: 'wonk', list: originalState.list }),
+    false,
+  );
+});
+
+Deno.test('Templates Bound: willChange returns true if the bound state has a fuzzy equal array', () => {
+  const document = createTestDom();
+  const originalState = { hello: 'world', list: ['thing, thang'] };
+  const Template = ({ list }) => <h1>Hello {list.join(', ')}!</h1>;
+  const viewModel = (state) => {
+    return {
+      list: state.list,
+    };
+  };
+  const template = new Bound(Template, viewModel, {});
+  template.render({ state: originalState, document });
+
+  assertEquals(
+    template.willChange({ hello: 'world', list: ['thing', 'thang'] }),
+    true,
   );
 });
