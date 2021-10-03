@@ -15,7 +15,7 @@ import TextTemplate from '../../lib/templates/Text.ts';
 
 const { describe, it, xit, run } = testSuite();
 
-describe('Templates', () => {
+describe('Templates Tag', () => {
   describe('initialization (without jsx)', () => {
     it('setups empty events and attributes for undecorated tags', () => {
       const template = new TagTemplate('h1', null, 'Hello World');
