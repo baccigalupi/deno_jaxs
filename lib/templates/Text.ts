@@ -18,6 +18,9 @@ export default class TextTemplate implements Template {
     return this.dom as Text;
   }
 
-  removeDom() {}
+  removeDom() {
+    this.dom && this.dom.remove();
+  }
+
   removeListeners() {}
 }

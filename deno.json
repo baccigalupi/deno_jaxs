@@ -5,6 +5,7 @@
     "jsxFragmentFactory": "jsx.fragment",
     "lib": [
       "dom",
+      "dom.iterable",
       "deno.ns",
       "deno.unstable"
     ]
