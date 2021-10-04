@@ -1,2 +1,3 @@
-# deno_jaxs
-Rebuild of Jaxs using Deno
+# Jaxs
+
+Rebuild of Jaxs using Deno.
