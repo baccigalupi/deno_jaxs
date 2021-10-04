@@ -33,9 +33,9 @@ export type TemplateDom = Text | Element;
 export interface Template {
   dom: TemplateDom | undefined;
   render: (renderKit: RenderKit) => TemplateDom;
+  willChange: (renderKit: RenderKit) => boolean;
   rerender: (renderKit: RenderKit) => TemplateDom;
-  removeDom: () => void;
-  removeListeners: () => void;
+  remove: () => void;
 }
 
 // deno-lint-ignore no-explicit-any

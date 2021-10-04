@@ -14,13 +14,19 @@ export default class TextTemplate implements Template {
     return this.dom;
   }
 
+  willChange(_renderKit: RenderKit): boolean {
+    return false;
+  }
+
   rerender(_renderKit: RenderKit): Text {
     return this.dom as Text;
+  }
+
+  remove() {
+    this.removeDom();
   }
 
   removeDom() {
     this.dom && this.dom.remove();
   }
-
-  removeListeners() {}
 }
