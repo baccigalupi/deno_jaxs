@@ -27,17 +27,25 @@ export type RouteCollection = Array<Route>;
 export type RenderKit = {
   document: Document;
   props?: Attributes;
+  publish?: BusPublisher;
+  state?: State;
 };
 
 export type TemplateDom = Text | Element;
 
 export interface Template {
-  dom: TemplateDom | undefined;
+  dom?: TemplateDom | undefined;
   render: (renderKit: RenderKit) => TemplateDom;
   willChange: (renderKit: RenderKit) => boolean;
   rerender: (renderKit: RenderKit) => TemplateDom;
   remove: () => void;
 }
+
+export type TemplateCreator = (props: Attributes) => Template;
+
+// deno-lint-ignore no-explicit-any
+export type State = Record<string, any>;
+export type ViewModel = (state: State) => State;
 
 // deno-lint-ignore no-explicit-any
 export type Attributes = Record<string, any>;

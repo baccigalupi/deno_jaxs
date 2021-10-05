@@ -10,7 +10,7 @@ import {
   createAction,
   createReducer,
 } from 'https://raw.githubusercontent.com/baccigalupi/redaxted/main/mod.js';
-import { bind } from '../../lib/templates/Bound.js';
+import { bind } from '../../lib/templates/Bound.ts';
 
 import jsx from '../../lib/jsx.js';
 import { createTestDom, domToString } from '../support/testDom.js';

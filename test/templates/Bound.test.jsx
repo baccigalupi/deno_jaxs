@@ -2,7 +2,7 @@ import { testSuite } from 'https://raw.githubusercontent.com/baccigalupi/deno_de
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
-import { bind, Bound } from '../../lib/templates/Bound.js';
+import { bind, Bound } from '../../lib/templates/Bound.ts';
 
 import { createTestDom, domToString } from '../support/testDom.js';
 const { describe, it, xit, run } = testSuite();
@@ -152,7 +152,10 @@ describe('Templates, Bound', () => {
       const template = new Bound(Template, viewModel, {});
       template.render({ state: originalState, document });
 
-      assertEquals(template.willChange({ hello: 'world', list: [] }), false);
+      assertEquals(
+        template.willChange({ state: { hello: 'world', list: [] } }),
+        false,
+      );
     });
 
     it('returns true if the bound state not equaL', () => {
@@ -167,7 +170,10 @@ describe('Templates, Bound', () => {
       const template = new Bound(Template, viewModel, {});
       template.render({ state: originalState, document });
 
-      assertEquals(template.willChange({ hello: 'wonk', list: [] }), true);
+      assertEquals(
+        template.willChange({ state: { hello: 'wonk', list: [] } }),
+        true,
+      );
     });
 
     it('returns false if the bound state has an identical array', () => {
@@ -183,7 +189,9 @@ describe('Templates, Bound', () => {
       template.render({ state: originalState, document });
 
       assertEquals(
-        template.willChange({ hello: 'wonk', list: originalState.list }),
+        template.willChange({
+          state: { hello: 'wonk', list: originalState.list },
+        }),
         false,
       );
     });
@@ -201,7 +209,9 @@ describe('Templates, Bound', () => {
       template.render({ state: originalState, document });
 
       assertEquals(
-        template.willChange({ hello: 'world', list: ['thing', 'thang'] }),
+        template.willChange({
+          state: { hello: 'world', list: ['thing', 'thang'] },
+        }),
         true,
       );
     });

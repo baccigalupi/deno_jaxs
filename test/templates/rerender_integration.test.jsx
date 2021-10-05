@@ -2,7 +2,7 @@ import { testSuite } from 'https://raw.githubusercontent.com/baccigalupi/deno_de
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
-import { bind } from '../../lib/templates/Bound.js';
+import { bind } from '../../lib/templates/Bound.ts';
 import {
   createTestDom,
   domToString,
