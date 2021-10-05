@@ -26,6 +26,7 @@ export type RouteCollection = Array<Route>;
 // Templates ------
 export type RenderKit = {
   document: Document;
+  props?: Attributes;
 };
 
 export type TemplateDom = Text | Element;
@@ -40,7 +41,13 @@ export interface Template {
 
 // deno-lint-ignore no-explicit-any
 export type Attributes = Record<string, any>;
+export type EventAttributes = Record<string, string>;
 export type AttributesAndEvents = {
   attributes: Attributes;
-  events: Attributes;
+  events: EventAttributes;
 };
+export type DomEventListenerData = {
+  event: string;
+  listener: EventListener;
+};
+export type DomEventListeners = Array<DomEventListenerData>;

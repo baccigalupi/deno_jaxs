@@ -10,7 +10,7 @@ import {
 import { createTestDom, domToString } from '../support/testDom.js';
 import jsx from '../../lib/jsx.js';
 
-import TagTemplate from '../../lib/templates/Tag.js';
+import TagTemplate from '../../lib/templates/Tag.ts';
 import TextTemplate from '../../lib/templates/Text.ts';
 
 const { describe, it, xit, run } = testSuite();

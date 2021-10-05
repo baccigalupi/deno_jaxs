@@ -1,17 +1,36 @@
+import {
+  Attributes,
+  DomEventListeners,
+  EventAttributes,
+  RenderKit,
+  Template,
+} from '../types.ts';
 import Children from './Children.js';
 import { createDecoratedNode, removeListeners } from '../utilities/dom.js';
 import { separateAttrsAndEvents, shallowEqual } from '../utilities/object.ts';
 
-export default class TagTemplate {
-  constructor(tagType, combinedAttributes, children) {
+export default class TagTemplate implements Template {
+  type: string;
+  events: EventAttributes;
+  listeners: DomEventListeners;
+  attributes: Attributes;
+  children: Children;
+  dom: Element | undefined;
+
+  constructor(
+    tagType: string,
+    combinedAttributes: Attributes,
+    children: Array<Template>,
+  ) {
     this.type = tagType;
     const { events, attributes } = separateAttrsAndEvents(combinedAttributes);
     this.events = events;
     this.attributes = attributes;
+    this.listeners = [];
     this.children = new Children(children);
   }
 
-  render(renderKit) {
+  render(renderKit: RenderKit) {
     const { dom, listeners } = createDecoratedNode(
       this.type,
       this.attributes,
@@ -20,12 +39,12 @@ export default class TagTemplate {
     );
 
     this.children.renderIntoParent(dom, renderKit);
-    this.dom = dom;
+    this.dom = dom as Element;
     this.listeners = listeners;
     return this.dom;
   }
 
-  willChange(renderKit) {
+  willChange(renderKit: RenderKit) {
     const { props } = renderKit;
 
     const { attributes } = separateAttrsAndEvents({
@@ -33,12 +52,10 @@ export default class TagTemplate {
       props,
     });
 
-    console.log(this.attributes, attributes);
-
     return !shallowEqual(attributes, this.attributes);
   }
 
-  rerender(renderKit) {
+  rerender(renderKit: RenderKit) {
     const { props } = renderKit;
     const { events, attributes } = separateAttrsAndEvents({
       ...this.attributes,
@@ -46,7 +63,7 @@ export default class TagTemplate {
     });
 
     if (shallowEqual(attributes, this.attributes)) {
-      return this.dom;
+      return this.dom as Element;
     }
 
     this.removeListeners();
@@ -62,10 +79,15 @@ export default class TagTemplate {
       renderKit,
     );
 
-    this.children.renderIntoParent(dom, renderKit);
-    this.dom = dom;
+    this.dom = dom as Element;
+    this.children.renderIntoParent(this.dom, renderKit);
     this.listeners = listeners;
     return this.dom;
+  }
+
+  remove() {
+    this.removeListeners();
+    this.removeDom();
   }
 
   removeListeners() {
@@ -74,6 +96,6 @@ export default class TagTemplate {
   }
 
   removeDom() {
-    this.dom.remove();
+    this.dom && this.dom.remove();
   }
 }
