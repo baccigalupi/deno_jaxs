@@ -5,7 +5,7 @@ import {
   TemplateCreator,
   TemplateDom,
 } from '../types.ts';
-import { isArray } from '../utilities/array.ts';
+import { any, isArray } from '../utilities/array.ts';
 import { shallowEqual } from '../utilities/object.ts';
 import { cloneWithDefaults } from '../utilities/object.ts';
 import Children from './Children.ts';
@@ -64,13 +64,7 @@ export default class AbstractTag implements Template {
   }
 
   childrenWillChange(renderKit: RenderKit) {
-    let willChange = false;
-    const length = this.children.length;
-    for (let i = 0; i < length; i++) {
-      willChange = this.children[i].willChange(renderKit);
-      if (willChange) break;
-    }
-    return willChange;
+    return any(this.children, (child) => child.willChange(renderKit));
   }
 
   willChange(renderKit: RenderKit) {
