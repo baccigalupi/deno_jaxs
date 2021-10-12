@@ -8,7 +8,7 @@ import jsx from '../../lib/jsx.js';
 import { createTestDom, domToString } from '../support/testDom.js';
 const { describe, it, xit, run } = testSuite();
 
-describe('Template, Fragment', () => {
+describe('Template, Children (Fragments)', () => {
   describe('render', () => {
     it('renders simple tag templates', () => {
       const template = (

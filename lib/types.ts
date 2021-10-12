@@ -29,6 +29,7 @@ export type RenderKit = {
   props?: Attributes;
   publish?: BusPublisher;
   state?: State;
+  children?: Array<Template>;
 };
 
 export type TemplateDom = Text | Element;
