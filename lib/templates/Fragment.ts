@@ -1,21 +1,22 @@
-import { RenderKit, Template } from '../types.ts';
-import Children from './Children.js';
+import { RenderKit, Template, TemplateDomCollection } from '../types.ts';
+import Children from './Children.ts';
 
 export default class FragmentTag implements Template {
   children: Children;
-  dom: Element | undefined;
+  dom: TemplateDomCollection;
 
   constructor(children: Array<Template>) {
     this.children = new Children(children);
+    this.dom = [];
   }
 
   render(renderKit: RenderKit) {
-    this.dom = this.children.render(renderKit) as Element;
+    this.dom = this.children.render(renderKit);
     return this.dom;
   }
 
   rerender(renderKit: RenderKit) {
-    this.dom = this.children.rerender(renderKit) as Element;
+    this.dom = this.children.rerender(renderKit);
     return this.dom;
   }
 

@@ -32,12 +32,13 @@ export type RenderKit = {
 };
 
 export type TemplateDom = Text | Element;
+export type TemplateDomCollection = Array<TemplateDom>;
 
 export interface Template {
-  dom?: TemplateDom | undefined;
-  render: (renderKit: RenderKit) => TemplateDom;
+  dom?: TemplateDom | TemplateDomCollection | undefined;
+  render: (renderKit: RenderKit) => TemplateDom | TemplateDomCollection;
   willChange: (renderKit: RenderKit) => boolean;
-  rerender: (renderKit: RenderKit) => TemplateDom;
+  rerender: (renderKit: RenderKit) => TemplateDom | TemplateDomCollection;
   remove: () => void;
 }
 

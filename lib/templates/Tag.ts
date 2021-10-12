@@ -5,7 +5,7 @@ import {
   RenderKit,
   Template,
 } from '../types.ts';
-import Children from './Children.js';
+import Children from './Children.ts';
 import { createDecoratedNode, removeListeners } from '../utilities/dom.js';
 import { separateAttrsAndEvents, shallowEqual } from '../utilities/object.ts';
 
@@ -86,13 +86,13 @@ export default class TagTemplate implements Template {
   }
 
   remove() {
+    this.children.remove();
     this.removeListeners();
     this.removeDom();
   }
 
   removeListeners() {
-    removeListeners(this.dom, this.listeners);
-    this.children.removeListeners();
+    this.dom && removeListeners(this.dom, this.listeners);
   }
 
   removeDom() {
