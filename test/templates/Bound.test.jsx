@@ -3,14 +3,21 @@ import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 
 import jsx from '../../lib/jsx.js';
 import { bind, Bound } from '../../lib/templates/Bound.ts';
+import TagTemplate from '../../lib/templates/Tag.ts';
 
 import { createTestDom, domToString } from '../support/testDom.js';
-const { describe, it, xit, run } = testSuite();
+const { describe, it, only, xit, run } = testSuite();
 
 describe('Templates, Bound', () => {
   describe('render', () => {
-    it('binds jsx with state data correctly', () => {
-      const Template = ({ name }) => <h1>Hello {name}!</h1>;
+    it('binds state data correctly', () => {
+      const Template = ({ name }) =>
+        new TagTemplate(
+          'h1',
+          null,
+          ['Hello ', name, '!'],
+        );
+
       const viewModel = (state) => {
         return {
           name: state.user.firstName,
@@ -18,7 +25,7 @@ describe('Templates, Bound', () => {
       };
 
       const BoundTemplate = bind(Template, viewModel);
-      const template = <BoundTemplate />;
+      const template = BoundTemplate();
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
@@ -27,12 +34,15 @@ describe('Templates, Bound', () => {
       assertEquals(domToString(node), '<h1>Hello Kane!</h1>');
     });
 
-    it('works with attributes', () => {
-      const Template = ({ name, greeting }) => (
-        <h1>
-          {greeting} {name}!
-        </h1>
-      );
+    it('works with attributes and bound state', () => {
+      const Template = ({ name, greeting }) => {
+        return new TagTemplate(
+          'h1',
+          null,
+          [greeting, ' ', name, '!'],
+        );
+      };
+
       const viewModel = (state) => {
         return {
           name: state.user.firstName,
@@ -40,7 +50,7 @@ describe('Templates, Bound', () => {
       };
 
       const BoundTemplate = bind(Template, viewModel);
-      const template = <BoundTemplate greeting='Hola' />;
+      const template = BoundTemplate({ greeting: 'Hola' });
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
@@ -50,14 +60,13 @@ describe('Templates, Bound', () => {
     });
 
     it('works with children', () => {
-      const Template = ({ name, greeting, children }) => (
-        <div>
-          <h1>
-            {greeting} {name}!
-          </h1>
-          {children}
-        </div>
-      );
+      const Template = ({ name, greeting, children }) => {
+        return new TagTemplate('div', null, [
+          new TagTemplate('h1', null, [greeting, ' ', name, '!']),
+          ...children,
+        ]);
+      };
+
       const viewModel = (state) => {
         return {
           name: state.user.firstName,
@@ -65,11 +74,16 @@ describe('Templates, Bound', () => {
       };
 
       const BoundTemplate = bind(Template, viewModel);
-      const template = (
-        <BoundTemplate greeting='Hola'>
-          <p>We are pleased to have a member of the family.</p>
-        </BoundTemplate>
-      );
+      const template = BoundTemplate({
+        greeting: 'Hola',
+        children: [
+          new TagTemplate(
+            'p',
+            null,
+            'We are pleased to have a member of the family.',
+          ),
+        ],
+      });
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
@@ -78,63 +92,6 @@ describe('Templates, Bound', () => {
       assertEquals(
         domToString(node),
         '<div><h1>Hola Kane!</h1><p>We are pleased to have a member of the family.</p></div>',
-      );
-    });
-
-    it('works with both state and props', () => {
-      const TabNavItem = ({ href, currentPath, description }) => {
-        const active = currentPath === href ? ' active' : '';
-        const classList = `nav-link${active}`;
-        return (
-          <li class='nav-item'>
-            <a href={href} class={classList}>
-              {description}
-            </a>
-          </li>
-        );
-      };
-
-      const viewModel = (state) => {
-        return {
-          currentPath: state.app.location.path,
-        };
-      };
-
-      const state = {
-        app: {
-          location: {
-            path: '/hello-nav-world',
-          },
-        },
-      };
-
-      const BoundTemplate = bind(TabNavItem, viewModel);
-
-      let template = (
-        <BoundTemplate
-          href='/navigation'
-          description='Navigation'
-        />
-      );
-
-      const document = createTestDom();
-      let node = template.render({ document, state });
-      assertEquals(
-        domToString(node),
-        '<li class="nav-item"><a href="/navigation" class="nav-link">Navigation</a></li>',
-      );
-
-      template = (
-        <BoundTemplate
-          href='/hello-nav-world'
-          description='Hello World'
-        />
-      );
-
-      node = template.render({ document, state });
-      assertEquals(
-        domToString(node),
-        '<li class="nav-item"><a href="/hello-nav-world" class="nav-link active">Hello World</a></li>',
       );
     });
   });

@@ -16,7 +16,7 @@ import TextTemplate from '../../lib/templates/Text.ts';
 const { describe, it, xit, run } = testSuite();
 
 describe('Templates Tag', () => {
-  describe('initialization (without jsx)', () => {
+  describe('initialization', () => {
     it('setups empty events and attributes for undecorated tags', () => {
       const template = new TagTemplate('h1', null, 'Hello World');
       assertEquals(template.attributes, {});
@@ -80,14 +80,6 @@ describe('Templates Tag', () => {
 
     it('generates text children elements', () => {
       const template = new TagTemplate('h1', null, 'Hello World');
-      const document = createTestDom();
-
-      const node = template.render({ document });
-      assertEquals(domToString(node), '<h1>Hello World</h1>');
-    });
-
-    it('works correctly with jsx', () => {
-      const template = <h1>Hello World</h1>;
       const document = createTestDom();
 
       const node = template.render({ document });

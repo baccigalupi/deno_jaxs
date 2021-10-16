@@ -9,6 +9,14 @@ import { createTestDom, domToString } from '../support/testDom.js';
 const { describe, it, xit, run } = testSuite();
 
 describe('jsx, basics', () => {
+  it('works without a functional closure', () => {
+    const template = <h1>Hello World</h1>;
+    const document = createTestDom();
+
+    const node = template.render({ document });
+    assertEquals(domToString(node), '<h1>Hello World</h1>');
+  });
+
   it('renders correct with no attributes', () => {
     const Template = () => <h1>Hello World</h1>;
     const template = <Template />;
