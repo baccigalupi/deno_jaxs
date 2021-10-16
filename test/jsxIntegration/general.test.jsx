@@ -6,7 +6,7 @@ import {
 import jsx from '../../lib/jsx.js';
 
 import { createTestDom, domToString } from '../support/testDom.js';
-const { describe, it, xit, run } = testSuite();
+const { describe, it, xit, run, only } = testSuite();
 
 describe('jsx, basics', () => {
   it('works without a functional closure', () => {
@@ -76,6 +76,7 @@ describe('jsx, basics', () => {
         <EmphasizedName name={lastName} />, {firstName}
       </div>
     );
+
     const Greeting = ({ children }) => <header>Hello {children}</header>;
 
     const template = (
