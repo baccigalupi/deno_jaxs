@@ -14,7 +14,7 @@ import { bind } from '../../lib/templates/Bound.ts';
 
 import jsx from '../../lib/jsx.js';
 import { createTestDom, domToString } from '../support/testDom.js';
-const { describe, it, xit, run } = testSuite();
+const { describe, it, run, xit, only } = testSuite();
 
 const initialState = { imageSrc: '/profile.png' };
 const action = createAction('alwaysChange');
@@ -119,7 +119,6 @@ describe('App', () => {
       });
 
       app.store.dispatch(action({ imageSrc: '/kane.png' }));
-      console.log(document);
       assertStringIncludes(domToString(document), '<img src="/kane.png">');
     });
   });
