@@ -16,22 +16,8 @@ export default class Children implements Template {
     return this.dom;
   }
 
-  willChange(_renderKit: RenderKit) {
-    return true;
-  }
-
-  rerender(renderKit: RenderKit) {
-    return this.render(renderKit);
-  }
-
   renderIntoParent(parentNode: Element, renderKit: RenderKit) {
     this.render(renderKit).forEach((dom) => {
-      parentNode.appendChild(dom);
-    });
-  }
-
-  rerenderIntoParent(parentNode: Element, renderKit: RenderKit) {
-    this.rerender(renderKit).forEach((dom) => {
       parentNode.appendChild(dom);
     });
   }

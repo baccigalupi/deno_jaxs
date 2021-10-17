@@ -26,7 +26,6 @@ export type RouteCollection = Array<Route>;
 // Templates ------
 export type RenderKit = {
   document: Document;
-  props?: Attributes;
   publish?: BusPublisher;
   state?: State;
   children?: Array<Template>;
@@ -38,8 +37,6 @@ export type TemplateDomCollection = Array<TemplateDom>;
 export interface Template {
   dom?: TemplateDom | TemplateDomCollection | undefined;
   render: (renderKit: RenderKit) => TemplateDom | TemplateDomCollection;
-  willChange: (renderKit: RenderKit) => boolean;
-  rerender: (renderKit: RenderKit) => TemplateDom | TemplateDomCollection;
   remove: () => void;
 }
 

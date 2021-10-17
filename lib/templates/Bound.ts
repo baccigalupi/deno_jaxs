@@ -29,15 +29,12 @@ export class Bound implements Template {
     this.props = {};
   }
 
-  // TODO: are props used here??? Simplify if possible
-  render({ document, props, publish, state }: RenderKit) {
-    props = props || {};
+  render({ document, publish, state }: RenderKit) {
     state = state || {};
     this.viewModelProps = this.viewModel(state);
 
     this.props = {
       ...this.viewModelProps,
-      ...props,
       ...this.attributes,
     };
 
@@ -47,33 +44,6 @@ export class Bound implements Template {
       document,
       publish,
       state,
-      props: this.props,
-    });
-  }
-
-  willChange({ state }: RenderKit) {
-    state = state || {};
-    const modelState = this.viewModel(state);
-    return !shallowEqual(this.viewModelProps, modelState);
-  }
-
-  rerender({ document, state, publish }: RenderKit) {
-    state = state || {};
-    this.viewModelProps = this.viewModel(state);
-
-    this.props = {
-      ...this.props,
-      ...this.viewModelProps,
-      ...this.attributes,
-    };
-
-    this.template = this.Template(this.props);
-
-    return this.template.rerender({
-      document,
-      publish,
-      state,
-      props: this.props,
     });
   }
 

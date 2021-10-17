@@ -20,18 +20,6 @@ describe('Templates Text', () => {
     assertEquals(node.data, 'Hello World');
   });
 
-  it(
-    'rerender does not change (because it should be all new instead somewhere else)',
-    () => {
-      const template = new TextTemplate('hello');
-      const document = createTestDom();
-      const node = template.render({ document });
-      const newNode = template.rerender({ document, children: ['goodbye'] });
-
-      assert(node === newNode);
-    },
-  );
-
   it('removeDom removes the node', () => {
     const template = new TextTemplate('hello');
     const document = createTestDom();

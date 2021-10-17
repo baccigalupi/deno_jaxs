@@ -44,47 +44,6 @@ export default class TagTemplate implements Template {
     return this.dom;
   }
 
-  willChange(renderKit: RenderKit) {
-    const { props } = renderKit;
-
-    const { attributes } = separateAttrsAndEvents({
-      ...this.attributes,
-      props,
-    });
-
-    return !shallowEqual(attributes, this.attributes);
-  }
-
-  rerender(renderKit: RenderKit) {
-    const { props } = renderKit;
-    const { events, attributes } = separateAttrsAndEvents({
-      ...this.attributes,
-      props,
-    });
-
-    if (shallowEqual(attributes, this.attributes)) {
-      return this.dom as Element;
-    }
-
-    this.removeListeners();
-    this.removeDom();
-
-    this.attributes = attributes;
-    this.events = events;
-
-    const { dom, listeners } = createDecoratedNode(
-      this.type,
-      this.attributes,
-      this.events,
-      renderKit,
-    );
-
-    this.dom = dom as Element;
-    this.children.renderIntoParent(this.dom, renderKit);
-    this.listeners = listeners;
-    return this.dom;
-  }
-
   remove() {
     this.children.remove();
     this.removeListeners();
