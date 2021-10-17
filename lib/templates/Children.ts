@@ -1,10 +1,10 @@
-import { RenderKit, Template } from '../types.ts';
+import { RenderKit, Template, TemplateDomCollection } from '../types.ts';
 import { ensureArray } from '../utilities/array.ts';
 import { recursiveRender, replaceTextNodes } from '../utilities/children.js';
 
 export default class Children implements Template {
   collection: Array<Template>;
-  dom: Array<Element>;
+  dom: TemplateDomCollection;
 
   constructor(jsxChildren: Array<Template>) {
     this.collection = ensureArray(jsxChildren).map(replaceTextNodes).flat();

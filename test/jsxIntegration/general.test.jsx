@@ -13,7 +13,7 @@ describe('jsx, basics', () => {
     const template = <h1>Hello World</h1>;
     const document = createTestDom();
 
-    const node = template.render({ document });
+    const [node] = template.render({ document });
     assertEquals(domToString(node), '<h1>Hello World</h1>');
   });
 
@@ -22,7 +22,7 @@ describe('jsx, basics', () => {
     const template = <Template />;
 
     const document = createTestDom();
-    const node = template.render({ document });
+    const [node] = template.render({ document });
     assertEquals(domToString(node), '<h1>Hello World</h1>');
   });
 
@@ -31,7 +31,7 @@ describe('jsx, basics', () => {
     const template = <Template name='World' />;
 
     const document = createTestDom();
-    const node = template.render({ document });
+    const [node] = template.render({ document });
     assertEquals(domToString(node), '<h1>Hello World</h1>');
   });
 
@@ -62,7 +62,7 @@ describe('jsx, basics', () => {
     const template = <Greeting user={user} />;
 
     const document = createTestDom();
-    const node = template.render({ document });
+    const [node] = template.render({ document });
     assertEquals(
       domToString(node),
       '<header>Hello <div><b>BACCIGALUPI</b>, Kane</div></header>',
@@ -86,7 +86,7 @@ describe('jsx, basics', () => {
     );
 
     const document = createTestDom();
-    const node = template.render({ document });
+    const [node] = template.render({ document });
     assertEquals(
       domToString(node),
       '<header>Hello <div><b>BACCIGALUPI</b>, Kane</div></header>',

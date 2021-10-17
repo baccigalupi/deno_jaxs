@@ -16,19 +16,21 @@ describe('Templates Text', () => {
     const document = createTestDom();
     const template = new TextTemplate('Hello World');
 
-    const node = template.render({ document });
+    const nodes = template.render({ document });
+    const [node] = nodes;
+    assertEquals(nodes.length, 1);
     assertEquals(node.data, 'Hello World');
   });
 
-  it('removeDom removes the node', () => {
+  it('remove removes the node', () => {
     const template = new TextTemplate('hello');
     const document = createTestDom();
-    const node = template.render({ document });
+    const [node] = template.render({ document });
 
     document.body.appendChild(node);
     assertMatch(domToString(document), /hello/);
 
-    template.removeDom();
+    template.remove();
     assertNotMatch(domToString(document), /hello/);
   });
 });

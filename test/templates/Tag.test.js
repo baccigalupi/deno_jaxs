@@ -52,8 +52,9 @@ describe('Templates Tag', () => {
     it('creates a correct simple tag representation', () => {
       const template = new TagTemplate('h1', null, null);
       const document = createTestDom();
-      const node = template.render({ document });
-
+      const nodes = template.render({ document });
+      const [node] = nodes;
+      assertEquals(nodes.length, 1);
       assertEquals(domToString(node), '<h1></h1>');
     });
 
@@ -62,7 +63,7 @@ describe('Templates Tag', () => {
       const template = new TagTemplate('i', attributes);
 
       const document = createTestDom();
-      const node = template.render({ document });
+      const [node] = template.render({ document });
 
       assertEquals(
         domToString(node),
@@ -73,7 +74,7 @@ describe('Templates Tag', () => {
     it('generates self-closing tags', () => {
       const template = new TagTemplate('img', { src: '/profile.png' }, null);
       const document = createTestDom();
-      const node = template.render({ document });
+      const [node] = template.render({ document });
 
       assertEquals(domToString(node), '<img src="/profile.png">');
     });
@@ -82,7 +83,7 @@ describe('Templates Tag', () => {
       const template = new TagTemplate('h1', null, 'Hello World');
       const document = createTestDom();
 
-      const node = template.render({ document });
+      const [node] = template.render({ document });
       assertEquals(domToString(node), '<h1>Hello World</h1>');
     });
   });

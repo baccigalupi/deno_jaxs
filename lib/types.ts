@@ -26,17 +26,16 @@ export type RouteCollection = Array<Route>;
 // Templates ------
 export type RenderKit = {
   document: Document;
-  publish?: BusPublisher;
-  state?: State;
-  children?: Array<Template>;
+  publish: BusPublisher;
+  state: State;
 };
 
 export type TemplateDom = Text | Element;
 export type TemplateDomCollection = Array<TemplateDom>;
 
 export interface Template {
-  dom?: TemplateDom | TemplateDomCollection | undefined;
-  render: (renderKit: RenderKit) => TemplateDom | TemplateDomCollection;
+  dom: TemplateDomCollection;
+  render: (renderKit: RenderKit) => TemplateDomCollection;
   remove: () => void;
 }
 

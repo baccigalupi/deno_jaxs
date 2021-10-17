@@ -6,7 +6,7 @@ import { bind, Bound } from '../../lib/templates/Bound.ts';
 import TagTemplate from '../../lib/templates/Tag.ts';
 
 import { createTestDom, domToString } from '../support/testDom.js';
-const { describe, it, only, xit, run } = testSuite();
+const { describe, it, run, only, xit } = testSuite();
 
 describe('Templates, Bound', () => {
   describe('render', () => {
@@ -29,7 +29,7 @@ describe('Templates, Bound', () => {
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
-      const node = template.render({ document, state });
+      const [node] = template.render({ document, state });
 
       assertEquals(domToString(node), '<h1>Hello Kane!</h1>');
     });
@@ -54,7 +54,7 @@ describe('Templates, Bound', () => {
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
-      const node = template.render({ document, state });
+      const [node] = template.render({ document, state });
 
       assertEquals(domToString(node), '<h1>Hola Kane!</h1>');
     });
@@ -87,7 +87,7 @@ describe('Templates, Bound', () => {
 
       const document = createTestDom();
       const state = { user: { firstName: 'Kane', lastName: 'Baccigalupi' } };
-      const node = template.render({ document, state });
+      const [node] = template.render({ document, state });
 
       assertEquals(
         domToString(node),

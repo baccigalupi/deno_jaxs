@@ -4,6 +4,7 @@ import {
   EventAttributes,
   RenderKit,
   Template,
+  TemplateDomCollection,
 } from '../types.ts';
 import Children from './Children.ts';
 import { createDecoratedNode, removeListeners } from '../utilities/dom.js';
@@ -15,7 +16,7 @@ export default class TagTemplate implements Template {
   listeners: DomEventListeners;
   attributes: Attributes;
   children: Children;
-  dom: Element | undefined;
+  dom: TemplateDomCollection;
 
   constructor(
     tagType: string,
@@ -28,9 +29,10 @@ export default class TagTemplate implements Template {
     this.attributes = attributes;
     this.listeners = [];
     this.children = new Children(children);
+    this.dom = [];
   }
 
-  render(renderKit: RenderKit) {
+  render(renderKit: RenderKit): TemplateDomCollection {
     const { dom, listeners } = createDecoratedNode(
       this.type,
       this.attributes,
@@ -39,7 +41,7 @@ export default class TagTemplate implements Template {
     );
 
     this.children.renderIntoParent(dom, renderKit);
-    this.dom = dom as Element;
+    this.dom = [dom as Element];
     this.listeners = listeners;
     return this.dom;
   }
@@ -51,10 +53,10 @@ export default class TagTemplate implements Template {
   }
 
   removeListeners() {
-    this.dom && removeListeners(this.dom, this.listeners);
+    this.dom.forEach((element) => removeListeners(element, this.listeners));
   }
 
   removeDom() {
-    this.dom && this.dom.remove();
+    this.dom.forEach((element) => element.remove());
   }
 }

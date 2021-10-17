@@ -6,7 +6,7 @@ import {
 import jsx from '../../lib/jsx.js';
 
 import { createTestDom, domToString } from '../support/testDom.js';
-const { describe, it, xit, run } = testSuite();
+const { describe, it, run, xit, only } = testSuite();
 
 describe('jsx, fragments', () => {
   it('renders simple tag templates', () => {
@@ -52,7 +52,7 @@ describe('jsx, fragments', () => {
     const template = <WelcomePage name='Kane' />;
 
     const document = createTestDom();
-    const dom = template.render({ document });
+    const [dom] = template.render({ document });
 
     assertEquals(
       domToString(dom),

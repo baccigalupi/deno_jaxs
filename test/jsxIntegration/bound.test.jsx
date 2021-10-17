@@ -44,7 +44,7 @@ describe('jsx, bound templates', () => {
     );
 
     const document = createTestDom();
-    let node = template.render({ document, state });
+    let [node] = template.render({ document, state });
     assertEquals(
       domToString(node),
       '<li class="nav-item"><a href="/navigation" class="nav-link">Navigation</a></li>',
@@ -57,7 +57,7 @@ describe('jsx, bound templates', () => {
       />
     );
 
-    node = template.render({ document, state });
+    [node] = template.render({ document, state });
     assertEquals(
       domToString(node),
       '<li class="nav-item"><a href="/hello-nav-world" class="nav-link active">Hello World</a></li>',

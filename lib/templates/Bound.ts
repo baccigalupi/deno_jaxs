@@ -4,6 +4,7 @@ import {
   State,
   Template,
   TemplateCreator,
+  TemplateDomCollection,
   ViewModel,
 } from '../types.ts';
 
@@ -16,6 +17,7 @@ export class Bound implements Template {
   attributes: Attributes;
   viewModelProps: State;
   props: Attributes;
+  dom: TemplateDomCollection;
 
   constructor(
     Template: TemplateCreator,
@@ -27,6 +29,7 @@ export class Bound implements Template {
     this.attributes = attributes || {};
     this.viewModelProps = {};
     this.props = {};
+    this.dom = [];
   }
 
   render({ document, publish, state }: RenderKit) {
@@ -40,11 +43,13 @@ export class Bound implements Template {
 
     this.template = this.Template(this.props);
 
-    return this.template.render({
+    this.dom = this.template.render({
       document,
       publish,
       state,
     });
+
+    return this.dom;
   }
 
   remove() {
