@@ -35,7 +35,10 @@ export type TemplateDomCollection = Array<TemplateDom>;
 
 export interface Template {
   dom: TemplateDomCollection;
-  render: (renderKit: RenderKit) => TemplateDomCollection;
+  render: (
+    renderKit: RenderKit,
+    parentElement?: Element,
+  ) => TemplateDomCollection;
   remove: () => void;
 }
 

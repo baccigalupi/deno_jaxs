@@ -34,7 +34,7 @@ export default class TagTemplate implements Template {
 
   render(renderKit: RenderKit): TemplateDomCollection {
     const { dom, listeners } = this.generateDom(renderKit);
-    this.children.renderIntoParent(dom, renderKit);
+    this.children.render(renderKit, dom);
     this.dom = [dom as Element];
     this.listeners = listeners;
     return this.dom;

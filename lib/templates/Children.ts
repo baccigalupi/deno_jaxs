@@ -11,8 +11,9 @@ export default class Children implements Template {
     this.dom = [];
   }
 
-  render(renderKit: RenderKit) {
+  render(renderKit: RenderKit, parentElement: Element | undefined) {
     this.dom = this.generateDom(renderKit);
+    this.attachToParent(parentElement);
     return this.dom;
   }
 
@@ -20,9 +21,11 @@ export default class Children implements Template {
     return recursiveRender(this.collection, renderKit);
   }
 
-  renderIntoParent(parentNode: Element, renderKit: RenderKit) {
-    this.render(renderKit).forEach((dom) => {
-      parentNode.appendChild(dom);
+  attachToParent(parentElement: Element | undefined) {
+    if (!parentElement) return;
+
+    this.dom.forEach((dom) => {
+      parentElement.appendChild(dom);
     });
   }
 
