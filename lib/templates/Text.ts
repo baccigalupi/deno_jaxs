@@ -16,7 +16,9 @@ export default class TextTemplate implements Template {
   }
 
   generateDom(renderKit: RenderKit) {
-    return [createTextNode(this.value, renderKit.document) as Text];
+    const textNode = createTextNode(this.value, renderKit.document);
+    if (!textNode) return [];
+    return [textNode];
   }
 
   remove() {
