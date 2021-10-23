@@ -87,6 +87,15 @@ describe('Templates Tag', () => {
       assertEquals(domToString(node), '<h1>Hello World</h1>');
     });
   });
+
+  describe('rerender', () => {
+    xit('when the tag itself changes, replaces itself on the parent', () => {});
+    xit(
+      'when the children change, leaves the tag and replaces the children',
+      () => {},
+    );
+    xit('when neither the tag no children change, no-ops', () => {});
+  });
 });
 
 await run();

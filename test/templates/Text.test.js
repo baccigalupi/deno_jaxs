@@ -9,7 +9,7 @@ import {
 import TextTemplate from '../../lib/templates/Text.ts';
 import { createTestDom, domToString } from '../support/testDom.js';
 
-const { describe, it, run } = testSuite();
+const { describe, it, run, xit } = testSuite();
 
 describe('Templates Text', () => {
   it('renders a dom text node', () => {
@@ -33,6 +33,8 @@ describe('Templates Text', () => {
     template.remove();
     assertNotMatch(domToString(document), /hello/);
   });
+
+  xit('rerender return the existing dom', () => {});
 });
 
 await run();

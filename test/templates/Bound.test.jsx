@@ -95,6 +95,14 @@ describe('Templates, Bound', () => {
       );
     });
   });
+
+  describe('rerender', () => {
+    xit('when the template will not change, no-ops', () => {});
+    xit(
+      'when the template changes, delegates rerendering to the template',
+      () => {},
+    );
+  });
 });
 
 await run();
