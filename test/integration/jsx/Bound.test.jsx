@@ -1,9 +1,9 @@
 import { testSuite } from 'https://raw.githubusercontent.com/baccigalupi/deno_describeIt/main/lib/testSuite.ts';
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
-import jsx from '../../lib/jsx.js';
-import { bind } from '../../lib/templates/Bound.ts';
+import jsx from '../../../lib/jsx.js';
+import { bind } from '../../../lib/templates/Bound.ts';
 
-import { createTestDom, domToString } from '../support/testDom.js';
+import { createTestDom, domToString } from '../../support/testDom.js';
 const { describe, it, run } = testSuite();
 
 describe('jsx, bound templates', () => {

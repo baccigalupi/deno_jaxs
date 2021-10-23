@@ -12,8 +12,9 @@ import jsx from '../../lib/jsx.js';
 
 import TagTemplate from '../../lib/templates/Tag.ts';
 import TextTemplate from '../../lib/templates/Text.ts';
+import { Bound } from '../../lib/templates/Bound.ts';
 
-const { describe, it, xit, run } = testSuite();
+const { describe, it, run, xit, only } = testSuite();
 
 describe('Templates Tag', () => {
   describe('initialization', () => {
@@ -89,11 +90,31 @@ describe('Templates Tag', () => {
   });
 
   describe('rerender', () => {
-    xit('when the tag itself changes, replaces itself on the parent', () => {});
+    xit('when the tag itself changes, replaces itself on the parent', () => {
+      const document = createTestDom();
+      const state = { ui: { dropdown: '' } };
+    });
+
     xit(
       'when the children change, leaves the tag and replaces the children',
-      () => {},
+      () => {
+        const document = createTestDom();
+
+        const state = { currentUser: { name: 'World' } };
+        const viewModel = (state) => state.currentUser;
+        const Name = ({ name }) => new TagTemplate('b', null, [name]);
+        const bound = new Bound(Name, viewModel, {});
+        const greeting = new TagTemplate('h1', null, ['Hello ', bound, '!']);
+
+        let [node] = greeting.render({ document, state });
+        assertEquals(domToString(node), '<h1>Hello <b>World</b>!</h1>');
+
+        const newState = { currentUser: { name: 'Kane' } };
+        [node] = greeting.rerender({ document, newState });
+        assertEquals(domToString(node), '<h1>Hello <b>Kane</b>!</h1>');
+      },
     );
+
     xit('when neither the tag no children change, no-ops', () => {});
   });
 });

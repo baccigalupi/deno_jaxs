@@ -3,9 +3,9 @@ import {
   assertEquals,
   assertStringIncludes,
 } from 'https://deno.land/std/testing/asserts.ts';
-import jsx from '../../lib/jsx.js';
+import jsx from '../../../lib/jsx.js';
 
-import { createTestDom, domToString } from '../support/testDom.js';
+import { createTestDom, domToString } from '../../support/testDom.js';
 const { describe, it, xit, run, only } = testSuite();
 
 describe('jsx, basics', () => {
@@ -45,7 +45,7 @@ describe('jsx, basics', () => {
     const Greeting = ({ user }) => {
       return (
         <header>
-          Hello{" "}
+          Hello{' '}
           <AccountingName
             firstName={user.firstName}
             lastName={user.lastName}

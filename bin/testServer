@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+bin/bundle
+deno run --allow-net --unstable --allow-read test/integration/testServer.js
