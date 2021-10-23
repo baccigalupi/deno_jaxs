@@ -22,14 +22,14 @@ export class Root implements Template {
   }
 
   render(renderKit: RenderKit) {
-    this.generateDom(renderKit);
+    this.dom = this.generateDom(renderKit);
     this.attachToParent();
     return this.dom;
   }
 
   generateDom(renderKit: RenderKit) {
     this.template = this.Template({});
-    this.dom = this.template.render(renderKit);
+    return this.template.render(renderKit);
   }
 
   attachToParent() {

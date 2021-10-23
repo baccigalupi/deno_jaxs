@@ -32,8 +32,13 @@ export class Bound implements Template {
     this.dom = [];
   }
 
-  render({ document, publish, state }: RenderKit) {
-    state = state || {};
+  render(renderKit: RenderKit) {
+    this.dom = this.generateDom(renderKit);
+    return this.dom;
+  }
+
+  generateDom(renderKit: RenderKit) {
+    const state = renderKit.state || {};
     this.viewModelProps = this.viewModel(state);
 
     this.props = {
@@ -42,14 +47,7 @@ export class Bound implements Template {
     };
 
     this.template = this.Template(this.props);
-
-    this.dom = this.template.render({
-      document,
-      publish,
-      state,
-    });
-
-    return this.dom;
+    return this.template.render(renderKit);
   }
 
   remove() {

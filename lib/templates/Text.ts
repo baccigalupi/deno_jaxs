@@ -10,9 +10,13 @@ export default class TextTemplate implements Template {
     this.dom = [];
   }
 
-  render({ document }: RenderKit): TemplateDomCollection {
-    this.dom = [createTextNode(this.value, document) as Text];
+  render(renderKit: RenderKit): TemplateDomCollection {
+    this.dom = this.generateDom(renderKit);
     return this.dom;
+  }
+
+  generateDom(renderKit: RenderKit) {
+    return [createTextNode(this.value, renderKit.document) as Text];
   }
 
   remove() {

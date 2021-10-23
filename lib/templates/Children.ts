@@ -12,8 +12,12 @@ export default class Children implements Template {
   }
 
   render(renderKit: RenderKit) {
-    this.dom = recursiveRender(this.collection, renderKit);
+    this.dom = this.generateDom(renderKit);
     return this.dom;
+  }
+
+  generateDom(renderKit: RenderKit) {
+    return recursiveRender(this.collection, renderKit);
   }
 
   renderIntoParent(parentNode: Element, renderKit: RenderKit) {
