@@ -29,6 +29,22 @@ const document = createTestDom(`
   </div>
 `);
 
+let documentListeners;
+const originalDocumentListener = document.addEventListener;
+
+const mockDocumentListener = () => {
+  documentListeners = [];
+  document.addEventListener = (_event, listener) => {
+    documentListeners.push(listener);
+  };
+};
+
+const resetDocumentListener = () => {
+  document.addEventListener = originalDocumentListener;
+};
+
+const callDocumentListeners = () => documentListeners.forEach((fn) => fn());
+
 describe('App', () => {
   describe('initialization', () => {
     it('sets up some important stuff', () => {
@@ -45,17 +61,23 @@ describe('App', () => {
 
   describe('render', () => {
     it('appends into the document at the selector location', () => {
+      mockDocumentListener();
+
       const handlers = [];
       const app = new App({ handlers, reducers: baseReducer });
 
       const Template = () => <img src='/image.png' />;
       app.render({ document, Template, selector: '#image-holder' });
+      callDocumentListeners();
 
       assertStringIncludes(domToString(document), '<img src="/image.png">');
       assertEquals(app.rootTemplates.length, 1);
+
+      resetDocumentListener();
     });
 
     it('can append multiple, separate templates into the document', () => {
+      mockDocumentListener();
       const handlers = [];
       const app = new App({ handlers, reducers: baseReducer });
 
@@ -63,6 +85,7 @@ describe('App', () => {
       app.render({ document, Template, selector: '#image-holder' });
       Template = () => <footer>Hello footer</footer>;
       app.render({ document, Template, selector: '#footer' });
+      callDocumentListeners();
 
       assertStringIncludes(domToString(document), '<img src="/image.png">');
       assertStringIncludes(
@@ -70,9 +93,11 @@ describe('App', () => {
         '<footer>Hello footer</footer>',
       );
       assertEquals(app.rootTemplates.length, 2);
+      resetDocumentListener();
     });
 
     it('uses state', () => {
+      mockDocumentListener();
       const handlers = [];
       const app = new App({ handlers, reducers: baseReducer });
 
@@ -86,8 +111,10 @@ describe('App', () => {
         Template: BoundTemplate,
         selector: '#image-holder',
       });
+      callDocumentListeners();
 
       assertStringIncludes(domToString(document), '<img src="/profile.png">');
+      resetDocumentListener();
     });
   });
 
