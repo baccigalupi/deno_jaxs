@@ -39,6 +39,10 @@ export interface Template {
     renderKit: RenderKit,
     parentElement?: Element,
   ) => TemplateDomCollection;
+  rerender: (
+    renderKit: RenderKit,
+    parentElement?: Element,
+  ) => TemplateDomCollection;
   remove: () => void;
 }
 

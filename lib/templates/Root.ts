@@ -27,6 +27,12 @@ export class Root implements Template {
     return this.dom;
   }
 
+  rerender(renderKit: RenderKit) {
+    this.dom = this.generateDom(renderKit);
+    this.attachToParent();
+    return this.dom;
+  }
+
   generateDom(renderKit: RenderKit) {
     this.template = this.Template({});
     return this.template.render(renderKit);

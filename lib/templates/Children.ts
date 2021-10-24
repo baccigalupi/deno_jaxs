@@ -17,6 +17,12 @@ export default class Children implements Template {
     return this.dom;
   }
 
+  rerender(renderKit: RenderKit, parentElement: Element | undefined) {
+    this.dom = this.generateDom(renderKit);
+    this.attachToParent(parentElement);
+    return this.dom;
+  }
+
   generateDom(renderKit: RenderKit) {
     return recursiveRender(this.collection, renderKit);
   }

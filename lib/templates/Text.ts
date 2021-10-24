@@ -15,6 +15,11 @@ export default class TextTemplate implements Template {
     return this.dom;
   }
 
+  rerender(renderKit: RenderKit): TemplateDomCollection {
+    this.dom = this.generateDom(renderKit);
+    return this.dom;
+  }
+
   generateDom(renderKit: RenderKit) {
     const textNode = createTextNode(this.value, renderKit.document);
     if (!textNode) return [];

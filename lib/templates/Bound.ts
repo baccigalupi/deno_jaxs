@@ -37,6 +37,11 @@ export class Bound implements Template {
     return this.dom;
   }
 
+  rerender(renderKit: RenderKit) {
+    this.dom = this.generateDom(renderKit);
+    return this.dom;
+  }
+
   generateDom(renderKit: RenderKit) {
     const state = renderKit.state || {};
     this.viewModelProps = this.viewModel(state);
