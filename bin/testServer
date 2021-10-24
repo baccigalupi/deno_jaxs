@@ -1,4 +1,4 @@
 #! /bin/zsh
 
-bin/bundle
+deno bundle test/integration/headless/src/simpleLinks.jsx test/integration/headless/dist/simpleLinks.js --config deno.json
 deno run --allow-net --unstable --allow-read test/integration/testServer.js

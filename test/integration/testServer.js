@@ -10,7 +10,7 @@ const htmlHome = await Deno.readTextFile(
 );
 
 const testPaths = [
-  'activeLinks',
+  'simpleLinks',
 ];
 
 const htmlFor = (filename) => {
@@ -29,7 +29,7 @@ const jsFor = (filename) => {
   let body = jaxsSource;
   if (filename !== 'jaxs') {
     body = Deno.readTextFileSync(
-      `${Deno.cwd()}/test/integration/headless/${filename}.js`,
+      `${Deno.cwd()}/test/integration/headless/dist/${filename}.js`,
     );
   }
 
