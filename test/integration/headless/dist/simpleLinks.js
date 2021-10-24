@@ -761,6 +761,10 @@ class TextTemplate {
     this.dom = this.generateDom(renderKit);
     return this.dom;
   }
+  rerender(renderKit) {
+    this.dom = this.generateDom(renderKit);
+    return this.dom;
+  }
   generateDom(renderKit) {
     const textNode = createTextNode(this.value, renderKit.document);
     if (!textNode) return [];
@@ -812,6 +816,11 @@ class Children {
     this.attachToParent(parentElement);
     return this.dom;
   }
+  rerender(renderKit, parentElement) {
+    this.dom = this.generateDom(renderKit);
+    this.attachToParent(parentElement);
+    return this.dom;
+  }
   generateDom(renderKit) {
     return recursiveRender(this.collection, renderKit);
   }
@@ -842,6 +851,16 @@ class TagTemplate {
     this.dom = [];
   }
   render(renderKit) {
+    const { dom, listeners } = this.generateDom(renderKit);
+    if (!dom) return this.dom;
+    this.children.render(renderKit, dom);
+    this.dom = [
+      dom,
+    ];
+    this.listeners = listeners;
+    return this.dom;
+  }
+  rerender(renderKit) {
     const { dom, listeners } = this.generateDom(renderKit);
     if (!dom) return this.dom;
     this.children.render(renderKit, dom);
@@ -968,6 +987,11 @@ class Root {
     this.attachToParent();
     return this.dom;
   }
+  rerender(renderKit) {
+    this.dom = this.generateDom(renderKit);
+    this.attachToParent();
+    return this.dom;
+  }
   generateDom(renderKit) {
     this.template = this.Template({});
     return this.template.render(renderKit);
@@ -1033,7 +1057,7 @@ class App {
     if (this.state === renderKit.state) return;
     this.state = renderKit.state;
     this.rootTemplates.forEach((template) => {
-      template.render(renderKit);
+      template.rerender(renderKit);
     });
   }
   renderKit() {
@@ -1064,6 +1088,10 @@ class Bound {
     this.dom = [];
   }
   render(renderKit) {
+    this.dom = this.generateDom(renderKit);
+    return this.dom;
+  }
+  rerender(renderKit) {
     this.dom = this.generateDom(renderKit);
     return this.dom;
   }

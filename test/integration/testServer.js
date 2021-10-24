@@ -4,7 +4,6 @@ const handler = (request) => {
   return generateResponse(request.url);
 };
 
-const jaxsSource = await Deno.readTextFile(`${Deno.cwd()}/dist/jaxs.js`);
 const htmlHome = await Deno.readTextFile(
   `${Deno.cwd()}/test/integration/headless/index.html`,
 );
@@ -24,14 +23,11 @@ const htmlFor = (filename) => {
 };
 
 const jsFor = (filename) => {
-  if (!testPaths.includes(filename) && filename !== 'jaxs') return notFound();
+  if (!testPaths.includes(filename)) return notFound();
 
-  let body = jaxsSource;
-  if (filename !== 'jaxs') {
-    body = Deno.readTextFileSync(
-      `${Deno.cwd()}/test/integration/headless/dist/${filename}.js`,
-    );
-  }
+  const body = Deno.readTextFileSync(
+    `${Deno.cwd()}/test/integration/headless/dist/${filename}.js`,
+  );
 
   return new Response(body.toString(), {
     status: 200,
