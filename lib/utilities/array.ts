@@ -14,7 +14,7 @@ export const ensureArray = (children: any) => {
 };
 
 // deno-lint-ignore no-explicit-any
-type Iterator = (element: any) => boolean;
+type Iterator = (element: any, index?: number) => boolean;
 // deno-lint-ignore no-explicit-any
 export const any = (array: Array<any>, iterator: Iterator): boolean => {
   let isTrue = false;

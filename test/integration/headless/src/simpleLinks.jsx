@@ -7,6 +7,18 @@ import {
   jsx,
 } from '../../../../lib/jaxs.js';
 
+const AreaData = [
+  { path: '/simpleLinks', identifier: 'home', description: 'Home area' },
+  { path: '/switchTabs', identifier: 'alt', description: 'Alternative view' },
+];
+
+const getAreaData = (path) =>
+  AreaData.find((area) => area.path === path) || {
+    path: 'unknown',
+    identifier: 'not-found',
+    description: 'huh?',
+  };
+
 const Link = ({ href, description }) => {
   return (
     <p>
@@ -19,25 +31,43 @@ const NotLink = ({ description }) => {
   return <p>{description}</p>;
 };
 
-const MaybeLink = ({ currentPath, href, description }) => {
-  if (currentPath === href) return <NotLink description={description} />;
-  return <Link href={href} description={description} />;
+const TabHeaderTemplate = ({ currentPath, path }) => {
+  const areaData = getAreaData(path);
+  if (currentPath === path) {
+    return <NotLink description={areaData.description} />;
+  }
+  return <Link href={path} description={areaData.description} />;
 };
 
-const linkViewModel = (state) => ({
+const currentPathViewModel = (state) => ({
   currentPath: state.location.path,
 });
 
-const TabHeader = bind(MaybeLink, linkViewModel);
+const TabHeader = bind(TabHeaderTemplate, currentPathViewModel);
+
+const TabBodyTemplate = ({ currentPath }) => {
+  const areaData = getAreaData(currentPath);
+  const className = `tab-body ${areaData.identifier}`;
+  return (
+    <div class={className}>
+      <hr />
+      <h2>{areaData.description}</h2>
+      <p>At path {areaData.path}</p>
+    </div>
+  );
+};
+
+const TabBody = bind(TabBodyTemplate, currentPathViewModel);
 
 const Page = () => {
   return (
     <div class='page'>
       <h1>Where to go, what to do?</h1>
       <div class='tab-headers'>
-        <TabHeader href='/simpleLinks' description='Home area' />
-        <TabHeader href='/switchTabs' description='Alternative view' />
+        <TabHeader path='/simpleLinks' />
+        <TabHeader path='/switchTabs' />
       </div>
+      <TabBody />
     </div>
   );
 };

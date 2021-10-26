@@ -1120,6 +1120,24 @@ const appHandlers = [
 const appReducers = {
   location: __default2,
 };
+const AreaData = [
+  {
+    path: '/simpleLinks',
+    identifier: 'home',
+    description: 'Home area',
+  },
+  {
+    path: '/switchTabs',
+    identifier: 'alt',
+    description: 'Alternative view',
+  },
+];
+const getAreaData = (path) =>
+  AreaData.find((area) => area.path === path) || {
+    path: 'unknown',
+    identifier: 'not-found',
+    description: 'huh?',
+  };
 const Link = ({ href, description }) => {
   return jsx(
     'p',
@@ -1133,21 +1151,36 @@ const Link = ({ href, description }) => {
 const NotLink = ({ description }) => {
   return jsx('p', null, description);
 };
-const MaybeLink = ({ currentPath, href, description }) => {
-  if (currentPath === href) {
+const TabHeaderTemplate = ({ currentPath, path }) => {
+  const areaData = getAreaData(path);
+  if (currentPath === path) {
     return jsx(NotLink, {
-      description: description,
+      description: areaData.description,
     });
   }
   return jsx(Link, {
-    href: href,
-    description: description,
+    href: path,
+    description: areaData.description,
   });
 };
-const linkViewModel = (state) => ({
+const currentPathViewModel = (state) => ({
   currentPath: state.location.path,
 });
-const TabHeader = bind(MaybeLink, linkViewModel);
+const TabHeader = bind(TabHeaderTemplate, currentPathViewModel);
+const TabBodyTemplate = ({ currentPath }) => {
+  const areaData = getAreaData(currentPath);
+  const className = `tab-body ${areaData.identifier}`;
+  return jsx(
+    'div',
+    {
+      class: className,
+    },
+    jsx('hr', null),
+    jsx('h2', null, areaData.description),
+    jsx('p', null, 'At path ', areaData.path),
+  );
+};
+const TabBody = bind(TabBodyTemplate, currentPathViewModel);
 const Page = () => {
   return jsx(
     'div',
@@ -1161,14 +1194,13 @@ const Page = () => {
         class: 'tab-headers',
       },
       jsx(TabHeader, {
-        href: '/simpleLinks',
-        description: 'Home area',
+        path: '/simpleLinks',
       }),
       jsx(TabHeader, {
-        href: '/switchTabs',
-        description: 'Alternative view',
+        path: '/switchTabs',
       }),
     ),
+    jsx(TabBody, null),
   );
 };
 const reducers = combineReducers(appReducers);
