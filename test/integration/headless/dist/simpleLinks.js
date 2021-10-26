@@ -807,27 +807,30 @@ const textNode = (content) => {
 class Children {
   collection;
   dom;
+  parentElement;
   constructor(jsxChildren) {
     this.collection = ensureArray(jsxChildren).map(replaceTextNodes).flat();
     this.dom = [];
   }
   render(renderKit, parentElement) {
+    this.parentElement = parentElement;
     this.dom = this.generateDom(renderKit);
-    this.attachToParent(parentElement);
+    this.attachToParent();
     return this.dom;
   }
-  rerender(renderKit, parentElement) {
+  rerender(renderKit) {
     this.dom = this.generateDom(renderKit);
-    this.attachToParent(parentElement);
+    this.attachToParent();
     return this.dom;
   }
   generateDom(renderKit) {
     return recursiveRender(this.collection, renderKit);
   }
-  attachToParent(parentElement) {
-    if (!parentElement) return;
+  attachToParent() {
+    if (this.parentElement === undefined) return;
+    const parent = this.parentElement;
     this.dom.forEach((dom) => {
-      parentElement.appendChild(dom);
+      parent.appendChild(dom);
     });
   }
   remove() {

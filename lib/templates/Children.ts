@@ -5,6 +5,7 @@ import { recursiveRender, replaceTextNodes } from '../utilities/children.js';
 export default class Children implements Template {
   collection: Array<Template>;
   dom: TemplateDomCollection;
+  parentElement: Element | undefined;
 
   constructor(jsxChildren: Array<Template>) {
     this.collection = ensureArray(jsxChildren).map(replaceTextNodes).flat();
@@ -12,14 +13,15 @@ export default class Children implements Template {
   }
 
   render(renderKit: RenderKit, parentElement: Element | undefined) {
+    this.parentElement = parentElement;
     this.dom = this.generateDom(renderKit);
-    this.attachToParent(parentElement);
+    this.attachToParent();
     return this.dom;
   }
 
-  rerender(renderKit: RenderKit, parentElement: Element | undefined) {
+  rerender(renderKit: RenderKit) {
     this.dom = this.generateDom(renderKit);
-    this.attachToParent(parentElement);
+    this.attachToParent();
     return this.dom;
   }
 
@@ -27,11 +29,12 @@ export default class Children implements Template {
     return recursiveRender(this.collection, renderKit);
   }
 
-  attachToParent(parentElement: Element | undefined) {
-    if (!parentElement) return;
+  attachToParent() {
+    if (this.parentElement === undefined) return;
 
+    const parent = this.parentElement as Element;
     this.dom.forEach((dom) => {
-      parentElement.appendChild(dom);
+      parent.appendChild(dom);
     });
   }
 

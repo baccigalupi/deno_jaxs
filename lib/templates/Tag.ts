@@ -42,6 +42,14 @@ export default class TagTemplate implements Template {
     return this.dom;
   }
 
+  // Rerendering self, has to happen from parent who can compare template objects:
+  // create new template
+  // check to see if the tag type, attributes or events have changed.
+  // if changed tag type changed, `this.dom.replaceWith(newTemplateDom)`
+  // else if attributes, diff and remove/add
+  //           if events changed, diff remove/add
+  //
+  // Then tell children to rerender
   rerender(renderKit: RenderKit): TemplateDomCollection {
     const { dom, listeners } = this.generateDom(renderKit);
     if (!dom) return this.dom;

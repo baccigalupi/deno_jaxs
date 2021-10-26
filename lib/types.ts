@@ -41,7 +41,6 @@ export interface Template {
   ) => TemplateDomCollection;
   rerender: (
     renderKit: RenderKit,
-    parentElement?: Element,
   ) => TemplateDomCollection;
   remove: () => void;
 }
