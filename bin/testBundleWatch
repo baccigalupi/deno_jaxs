@@ -1,0 +1,3 @@
+#! /bin/zsh
+
+deno bundle --config deno.json test/integration/headless/src/simpleLinks.jsx test/integration/headless/dist/simpleLinks.js --watch
