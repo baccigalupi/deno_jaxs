@@ -19,6 +19,10 @@ export default class Children implements Template {
     return this.dom;
   }
 
+  updatable(other: Template) {
+    return other.constructor === Children;
+  }
+
   rerender(renderKit: RenderKit) {
     this.dom = this.generateDom(renderKit);
     this.attachToParent();

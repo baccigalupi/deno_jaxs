@@ -22,9 +22,25 @@ export class Root implements Template {
   }
 
   render(renderKit: RenderKit) {
+    // generate new template
+    // check whether new template should replace old
+    // if replace
+    //    this.template = new template
+    //    dom = this.template.render
+    //    this.dom.replaceWith(dom);
+    //    return this.dom;
+    // if update
+    //    this.template.update(new template)
+    //    return this.dom;
+
     this.dom = this.generateDom(renderKit);
     this.attachToParent();
     return this.dom;
+  }
+
+  updatable(_other: Template) {
+    return true; // Root templates should never be asked this!
+    // They are the top of the stack.
   }
 
   rerender(renderKit: RenderKit) {

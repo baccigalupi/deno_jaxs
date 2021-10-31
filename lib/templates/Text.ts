@@ -15,6 +15,10 @@ export default class TextTemplate implements Template {
     return this.dom;
   }
 
+  updatable(other: Template) {
+    return other.constructor === TextTemplate;
+  }
+
   rerender(renderKit: RenderKit): TemplateDomCollection {
     this.dom = this.generateDom(renderKit);
     return this.dom;

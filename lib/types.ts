@@ -42,6 +42,9 @@ export interface Template {
   rerender: (
     renderKit: RenderKit,
   ) => TemplateDomCollection;
+  updatable: (
+    other: Template,
+  ) => boolean;
   remove: () => void;
 }
 

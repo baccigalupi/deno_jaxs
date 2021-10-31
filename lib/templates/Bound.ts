@@ -37,7 +37,22 @@ export class Bound implements Template {
     return this.dom;
   }
 
+  updatable(_other: Template) {
+    return true; // TODO: wth?
+  }
+
   rerender(renderKit: RenderKit) {
+    // generate new template
+    // check whether new template should replace old
+    // if replace
+    //    this.template = new template
+    //    dom = this.template.render
+    //    this.dom.replaceWith(dom);
+    //    return this.dom;
+    // if update
+    //    this.template.update(new template)
+    //    return this.dom;
+
     this.dom = this.generateDom(renderKit);
     return this.dom;
   }

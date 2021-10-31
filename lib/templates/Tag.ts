@@ -42,6 +42,11 @@ export default class TagTemplate implements Template {
     return this.dom;
   }
 
+  updatable(other: Template) {
+    return other.constructor === TagTemplate &&
+      (other as TagTemplate).type === this.type;
+  }
+
   // Rerendering self, has to happen from parent who can compare template objects:
   // create new template
   // check to see if the tag type, attributes or events have changed.
