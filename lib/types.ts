@@ -45,6 +45,7 @@ export interface Template {
   updatable: (
     other: Template,
   ) => boolean;
+  replaceDom: (dom: TemplateDomCollection) => void;
   remove: () => void;
 }
 

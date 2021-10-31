@@ -41,6 +41,11 @@ export class Bound implements Template {
     return true; // TODO: wth?
   }
 
+  replaceDom(dom: TemplateDomCollection) {
+    // TODO: wth? Not should about replacing unowned dom
+    // maybe in updateable stays true, then this never gets called
+  }
+
   rerender(renderKit: RenderKit) {
     // generate new template
     // check whether new template should replace old

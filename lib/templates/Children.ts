@@ -23,6 +23,12 @@ export default class Children implements Template {
     return other.constructor === Children;
   }
 
+  replaceDom(dom: TemplateDomCollection) {
+    this.remove();
+    this.dom = dom;
+    this.attachToParent();
+  }
+
   rerender(renderKit: RenderKit) {
     this.dom = this.generateDom(renderKit);
     this.attachToParent();

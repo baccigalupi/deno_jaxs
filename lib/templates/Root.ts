@@ -22,17 +22,6 @@ export class Root implements Template {
   }
 
   render(renderKit: RenderKit) {
-    // generate new template
-    // check whether new template should replace old
-    // if replace
-    //    this.template = new template
-    //    dom = this.template.render
-    //    this.dom.replaceWith(dom);
-    //    return this.dom;
-    // if update
-    //    this.template.update(new template)
-    //    return this.dom;
-
     this.dom = this.generateDom(renderKit);
     this.attachToParent();
     return this.dom;
@@ -44,9 +33,29 @@ export class Root implements Template {
   }
 
   rerender(renderKit: RenderKit) {
+    const template = this.Template({});
+
+    // if (this.template === undefined || !this.template.updatable(template)) {
+    //   return this.replaceWith(template, renderKit);
+    // }
+    //
+    //    this.template.update(new template)
+    //    return this.dom;
+
     this.dom = this.generateDom(renderKit);
     this.attachToParent();
     return this.dom;
+  }
+
+  replaceWith(template: Template, renderKit: RenderKit) {
+    this.dom = template.render(renderKit);
+    // this.template.replaceDom(dom);
+    this.template = template;
+    return this.dom;
+  }
+
+  replaceDom(dom: TemplateDomCollection) {
+    // no-op; Root elements have no parents to call this
   }
 
   generateDom(renderKit: RenderKit) {

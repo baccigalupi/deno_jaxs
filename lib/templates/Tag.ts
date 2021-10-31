@@ -7,7 +7,11 @@ import {
   TemplateDomCollection,
 } from '../types.ts';
 import Children from './Children.ts';
-import { createDecoratedNode, removeListeners } from '../utilities/dom.js';
+import {
+  appendAfter,
+  createDecoratedNode,
+  removeListeners,
+} from '../utilities/dom.js';
 import { separateAttrsAndEvents, shallowEqual } from '../utilities/object.ts';
 
 export default class TagTemplate implements Template {
@@ -47,6 +51,23 @@ export default class TagTemplate implements Template {
       (other as TagTemplate).type === this.type;
   }
 
+  replaceDom(dom: TemplateDomCollection) {
+    this.removeDependents();
+
+    this.dom[0].replaceWith(dom[0]);
+    let lastElement = dom[0];
+
+    dom.forEach((element, index) => {
+      if (index === 0) {
+        lastElement = element;
+        return;
+      }
+
+      appendAfter(element, lastElement);
+      lastElement = element;
+    });
+  }
+
   // Rerendering self, has to happen from parent who can compare template objects:
   // create new template
   // check to see if the tag type, attributes or events have changed.
@@ -74,9 +95,13 @@ export default class TagTemplate implements Template {
     );
   }
 
-  remove() {
+  removeDependents() {
     this.children.remove();
     this.removeListeners();
+  }
+
+  remove() {
+    this.removeDependents();
     this.removeDom();
   }
 
