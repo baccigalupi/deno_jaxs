@@ -2,8 +2,10 @@ import { testSuite } from 'https://raw.githubusercontent.com/baccigalupi/deno_de
 import { assertEquals } from 'https://deno.land/std/testing/asserts.ts';
 import {
   cloneWithDefaults,
+  removedKeys,
   separateAttrsAndEvents,
   shallowEqual,
+  updateAttributes,
 } from '../../lib/utilities/object.ts';
 
 const { describe, it, run } = testSuite();
@@ -90,6 +92,61 @@ describe('Utilities', () => {
         const obj = {};
         assertEquals(shallowEqual({ obj: obj }, { obj: obj }), true);
         assertEquals(shallowEqual({ obj: obj }, { obj: {} }), false);
+      });
+    });
+
+    describe('removedKeys', () => {
+      it('is empty when keys/values are identical', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(removedKeys(object, { ...object }), []);
+      });
+
+      it('is empty when more key/values have been added', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(
+          removedKeys(object, { ...object, fooBaz: 'barZardoz' }),
+          [],
+        );
+      });
+
+      it('includes all the keys that have been removed', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(
+          removedKeys(object, {}),
+          ['foo', 'baz'],
+        );
+      });
+    });
+
+    describe('updateAttributes', () => {
+      it('is empty when keys/values are identical', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(updateAttributes(object, { ...object }), {});
+      });
+
+      it('includes added key/values', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(
+          updateAttributes(object, { ...object, fooBaz: 'barZardoz' }),
+          { fooBaz: 'barZardoz' },
+        );
+      });
+
+      it('includes changed key/values', () => {
+        const object1 = { foo: 'bar', baz: 'zardoz' };
+        const object2 = { foo: 'barz', baz: 'zarz' };
+        assertEquals(
+          updateAttributes(object1, object2),
+          { foo: 'barz', baz: 'zarz' },
+        );
+      });
+
+      it('does not deal with removed keys', () => {
+        const object = { foo: 'bar', baz: 'zardoz' };
+        assertEquals(
+          updateAttributes(object, {}),
+          {},
+        );
       });
     });
   });

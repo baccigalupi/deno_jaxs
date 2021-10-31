@@ -69,3 +69,46 @@ export const normalizeValueForKey = (
   if (object[key] === undefined) return defaultValue;
   return object[key];
 };
+
+export const removedKeys = (
+  original: Attributes,
+  newObject: Attributes,
+): Array<string> => {
+  const removed: Array<string> = [];
+  Object.keys(original).reduce((aggregate, key) => {
+    if (newObject[key] === undefined) aggregate.push(key);
+    return aggregate;
+  }, removed);
+  return removed;
+};
+
+export const updateAttributes = (
+  original: Attributes,
+  newObject: Attributes,
+): Attributes => {
+  const updates: Attributes = {};
+  Object.keys(newObject).reduce((aggregate, key) => {
+    if (newObject[key] !== original[key]) {
+      aggregate[key] = newObject[key];
+    }
+    return aggregate;
+  }, updates);
+  return updates;
+};
+
+export const diffObject = (original: Attributes, newObject: Attributes) => {
+  const updateAttributes: Attributes = {};
+  const removeAttributes: Array<string> = [];
+
+  Object.keys(newObject).forEach((key) => {
+    if (newObject[key] !== original[key]) {
+      updateAttributes[key] = newObject[key];
+    }
+  });
+
+  Object.keys(original).forEach((key) => {
+    if (newObject[key] === undefined) removeAttributes.push(key);
+  });
+
+  return { updateAttributes, removeAttributes };
+};
