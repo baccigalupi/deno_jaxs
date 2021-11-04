@@ -12,7 +12,7 @@ import {
   createDecoratedNode,
   removeListeners,
 } from '../utilities/dom.js';
-import { separateAttrsAndEvents, shallowEqual } from '../utilities/object.ts';
+import { separateAttrsAndEvents } from '../utilities/object.ts';
 
 export default class TagTemplate implements Template {
   type: string;
@@ -31,7 +31,7 @@ export default class TagTemplate implements Template {
     const { events, attributes } = separateAttrsAndEvents(combinedAttributes);
     this.events = events;
     this.attributes = attributes;
-    this.listeners = [];
+    this.listeners = {};
     this.children = new Children(children);
     this.dom = [];
   }
@@ -42,7 +42,7 @@ export default class TagTemplate implements Template {
 
     this.children.render(renderKit, dom);
     this.dom = [dom];
-    this.listeners = listeners;
+    this.listeners = listeners as DomEventListeners;
     return this.dom;
   }
 
@@ -82,7 +82,7 @@ export default class TagTemplate implements Template {
 
     this.children.render(renderKit, dom);
     this.dom = [dom];
-    this.listeners = listeners;
+    this.listeners = listeners as DomEventListeners;
     return this.dom;
   }
 

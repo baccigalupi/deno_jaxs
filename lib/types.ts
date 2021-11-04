@@ -62,8 +62,4 @@ export type AttributesAndEvents = {
   attributes: Attributes;
   events: EventAttributes;
 };
-export type DomEventListenerData = {
-  event: string;
-  listener: EventListener;
-};
-export type DomEventListeners = Array<DomEventListenerData>;
+export type DomEventListeners = Record<string, EventListener>;
