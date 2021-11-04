@@ -10,9 +10,17 @@ import Children from './Children.ts';
 import {
   appendAfter,
   createDecoratedNode,
+  removeAttributesOnElement,
+  removeListener,
   removeListeners,
+  setAttributesOnElement,
+  setEventsOnElement,
 } from '../utilities/dom.js';
-import { separateAttrsAndEvents } from '../utilities/object.ts';
+import {
+  removedKeys,
+  separateAttrsAndEvents,
+  updateAttributes,
+} from '../utilities/object.ts';
 
 export default class TagTemplate implements Template {
   type: string;
@@ -21,6 +29,7 @@ export default class TagTemplate implements Template {
   attributes: Attributes;
   children: Children;
   dom: TemplateDomCollection;
+  generatesJsx: boolean;
 
   constructor(
     tagType: string,
@@ -34,6 +43,7 @@ export default class TagTemplate implements Template {
     this.listeners = {};
     this.children = new Children(children);
     this.dom = [];
+    this.generatesJsx = false;
   }
 
   render(renderKit: RenderKit): TemplateDomCollection {
@@ -68,14 +78,62 @@ export default class TagTemplate implements Template {
     });
   }
 
-  // Rerendering self, has to happen from parent who can compare template objects:
-  // create new template
-  // check to see if the tag type, attributes or events have changed.
-  // if changed tag type changed, `this.dom.replaceWith(newTemplateDom)`
-  // else if attributes, diff and remove/add
-  //           if events changed, diff remove/add
-  //
-  // Then tell children to rerender
+  update(template: Template, renderKit: RenderKit) {
+    if (this.dom.length !== 1) return this.dom;
+    const [element] = this.dom;
+
+    this.updateAttributes(element as Element, template as TagTemplate);
+    this.updateListeners(
+      element as Element,
+      template as TagTemplate,
+      renderKit,
+    );
+    this.children.update((template as TagTemplate).children, renderKit);
+
+    return this.dom;
+  }
+
+  updateAttributes(element: Element, template: TagTemplate) {
+    const newAttributes = template.attributes;
+    const updates = updateAttributes(this.attributes, newAttributes);
+    setAttributesOnElement(element, updates);
+    const removals = removedKeys(this.attributes, newAttributes);
+    removeAttributesOnElement(element, removals);
+    this.attributes = newAttributes;
+  }
+
+  updateListeners(
+    element: Element,
+    template: TagTemplate,
+    renderKit: RenderKit,
+  ) {
+    const dom = this.dom[0];
+    const newEvents = template.events;
+    const updates = updateAttributes(this.events, newEvents);
+    const removals = removedKeys(this.events, newEvents);
+
+    for (const eventName in updates) {
+      removeListener(dom, eventName, this.listeners[eventName]);
+    }
+    removals.forEach((eventName) => {
+      removeListener(dom, eventName, this.listeners[eventName]);
+      delete this.listeners[eventName];
+    })
+
+    const newListeners = setEventsOnElement(
+      element,
+      updates,
+      renderKit.publish,
+    ) as DomEventListeners;
+
+    for (const eventName in updates) {
+      this.listeners[eventName] = newListeners[eventName];
+    }
+    
+    this.events = newEvents;
+  }
+
+  // This shouldn't be called because it isn't a generator template
   rerender(renderKit: RenderKit): TemplateDomCollection {
     const { dom, listeners } = this.generateDom(renderKit);
     if (!dom) return this.dom;

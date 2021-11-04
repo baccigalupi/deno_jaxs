@@ -4,10 +4,12 @@ import { appendAfter, createTextNode } from '../utilities/dom.js';
 export default class TextTemplate implements Template {
   dom: TemplateDomCollection;
   value: string;
+  generatesJsx: boolean;
 
   constructor(content: string) {
     this.value = content;
     this.dom = [];
+    this.generatesJsx = false;
   }
 
   render(renderKit: RenderKit): TemplateDomCollection {

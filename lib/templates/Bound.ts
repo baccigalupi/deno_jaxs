@@ -15,9 +15,9 @@ export class Bound implements Template {
   template: Template | undefined;
   viewModel: ViewModel;
   attributes: Attributes;
-  viewModelProps: State;
   props: Attributes;
   dom: TemplateDomCollection;
+  generatesJsx: boolean;
 
   constructor(
     Template: TemplateCreator,
@@ -25,11 +25,12 @@ export class Bound implements Template {
     attributes: Attributes,
   ) {
     this.Template = Template;
+    this.dom = [];
+    this.generatesJsx = true;
+
     this.viewModel = viewModel;
     this.attributes = attributes || {};
-    this.viewModelProps = {};
     this.props = {};
-    this.dom = [];
   }
 
   render(renderKit: RenderKit) {
@@ -38,41 +39,62 @@ export class Bound implements Template {
   }
 
   updatable(_other: Template) {
-    return true; // TODO: wth?
+    return true;
   }
 
-  replaceDom(dom: TemplateDomCollection) {
-    // TODO: wth? Not should about replacing unowned dom
-    // maybe in updateable stays true, then this never gets called
+  replaceDom(_dom: TemplateDomCollection) {
+    // no-op
   }
 
   rerender(renderKit: RenderKit) {
-    // generate new template
-    // check whether new template should replace old
-    // if replace
-    //    this.template = new template
-    //    dom = this.template.render
-    //    this.dom.replaceWith(dom);
-    //    return this.dom;
-    // if update
-    //    this.template.update(new template)
-    //    return this.dom;
+    if (this.template === undefined) return this.render(renderKit);
+    const { template } = this.generateTemplate(renderKit);
 
-    this.dom = this.generateDom(renderKit);
-    return this.dom;
+    if (template.generatesJsx) {
+      return template.rerender(renderKit);
+    } else if (this.template.updatable(template)) {
+      return this.update(template, renderKit);
+    } else {
+      return this.replaceWith(template, renderKit);
+    }
   }
 
   generateDom(renderKit: RenderKit) {
-    const state = renderKit.state || {};
-    this.viewModelProps = this.viewModel(state);
+    const { props, template } = this.generateTemplate(renderKit);
+    this.props = props;
+    this.template = template;
+    return this.template.render(renderKit);
+  }
 
-    this.props = {
-      ...this.viewModelProps,
+  generateTemplate(renderKit: RenderKit) {
+    const state = renderKit.state || {};
+    const viewModelProps = this.viewModel(state);
+
+    const props = {
+      ...viewModelProps,
       ...this.attributes,
     };
 
-    this.template = this.Template(this.props);
-    return this.template.render(renderKit);
+    const template = this.Template(props);
+    return { props, template };
+  }
+
+  replaceWith(template: Template, renderKit: RenderKit) {
+    if (this.template === undefined) return this.dom;
+
+    this.dom = template.render(renderKit);
+    this.template.replaceDom(this.dom);
+    this.template = template;
+    return this.dom;
+  }
+
+  update(template: Template, renderKit: RenderKit) {
+    if (this.template === undefined) return this.dom;
+
+    this.template.update(template, renderKit);
+    this.template = template;
+
+    return this.dom;
   }
 
   remove() {

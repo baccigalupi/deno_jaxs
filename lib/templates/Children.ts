@@ -6,10 +6,12 @@ export default class Children implements Template {
   collection: Array<Template>;
   dom: TemplateDomCollection;
   parentElement: Element | undefined;
+  generatesJsx: boolean;
 
   constructor(jsxChildren: Array<Template>) {
     this.collection = ensureArray(jsxChildren).map(replaceTextNodes).flat();
     this.dom = [];
+    this.generatesJsx = false;
   }
 
   render(renderKit: RenderKit, parentElement: Element | undefined) {

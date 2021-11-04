@@ -45,7 +45,9 @@ export interface Template {
   updatable: (
     other: Template,
   ) => boolean;
+  generatesJsx: boolean;
   replaceDom: (dom: TemplateDomCollection) => void;
+  update: (template: Template, renderKit: RenderKit) => TemplateDomCollection;
   remove: () => void;
 }
 

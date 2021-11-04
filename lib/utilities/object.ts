@@ -95,20 +95,3 @@ export const updateAttributes = (
   }, updates);
   return updates;
 };
-
-export const diffObject = (original: Attributes, newObject: Attributes) => {
-  const updateAttributes: Attributes = {};
-  const removeAttributes: Array<string> = [];
-
-  Object.keys(newObject).forEach((key) => {
-    if (newObject[key] !== original[key]) {
-      updateAttributes[key] = newObject[key];
-    }
-  });
-
-  Object.keys(original).forEach((key) => {
-    if (newObject[key] === undefined) removeAttributes.push(key);
-  });
-
-  return { updateAttributes, removeAttributes };
-};

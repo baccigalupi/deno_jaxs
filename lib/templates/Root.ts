@@ -12,13 +12,16 @@ export class Root implements Template {
   parentElement: Element | null;
   dom: TemplateDomCollection;
   template: Template | undefined;
+  generatesJsx: boolean;
 
   constructor(Template: TemplateCreator, selector: string, document = null) {
     this.Template = Template;
+    this.dom = [];
+    this.generatesJsx = true;
+
     this.selector = selector;
     this.document = document || window.document;
     this.parentElement = this.document.querySelector(selector);
-    this.dom = [];
   }
 
   render(renderKit: RenderKit) {
@@ -33,24 +36,34 @@ export class Root implements Template {
   }
 
   rerender(renderKit: RenderKit) {
-    const template = this.Template({});
+    if (this.template === undefined) return this.render(renderKit);
 
-    // if (this.template === undefined || !this.template.updatable(template)) {
-    //   return this.replaceWith(template, renderKit);
-    // }
-    //
-    //    this.template.update(new template)
-    //    return this.dom;
+    const { template } = this.generateTemplate(renderKit);
 
-    this.dom = this.generateDom(renderKit);
-    this.attachToParent();
-    return this.dom;
+    if (template.generatesJsx) {
+      return template.rerender(renderKit);
+    } else if (this.template.updatable(template)) {
+      return this.update(template, renderKit);
+    } else {
+      return this.replaceWith(template, renderKit);
+    }
   }
 
   replaceWith(template: Template, renderKit: RenderKit) {
+    if (this.template === undefined) return this.dom;
+
     this.dom = template.render(renderKit);
-    // this.template.replaceDom(dom);
+    this.template.replaceDom(this.dom);
     this.template = template;
+    return this.dom;
+  }
+
+  update(template: Template, renderKit: RenderKit) {
+    if (this.template === undefined) return this.dom;
+
+    this.template.update(template, renderKit);
+    this.template = template;
+
     return this.dom;
   }
 
@@ -59,8 +72,14 @@ export class Root implements Template {
   }
 
   generateDom(renderKit: RenderKit) {
-    this.template = this.Template({});
+    const { template } = this.generateTemplate(renderKit);
+    this.template = template;
     return this.template.render(renderKit);
+  }
+
+  generateTemplate(_renderKit: RenderKit) {
+    const template = this.Template({});
+    return { template };
   }
 
   attachToParent() {
