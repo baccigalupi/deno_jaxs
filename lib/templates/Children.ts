@@ -25,6 +25,10 @@ export default class Children implements Template {
     return other.constructor === Children;
   }
 
+  update(template: Template, _renderKit: RenderKit) {
+    return this.dom;
+  }
+
   replaceDom(dom: TemplateDomCollection) {
     this.remove();
     this.dom = dom;

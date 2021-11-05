@@ -118,7 +118,7 @@ export default class TagTemplate implements Template {
     removals.forEach((eventName) => {
       removeListener(dom, eventName, this.listeners[eventName]);
       delete this.listeners[eventName];
-    })
+    });
 
     const newListeners = setEventsOnElement(
       element,
@@ -129,7 +129,7 @@ export default class TagTemplate implements Template {
     for (const eventName in updates) {
       this.listeners[eventName] = newListeners[eventName];
     }
-    
+
     this.events = newEvents;
   }
 

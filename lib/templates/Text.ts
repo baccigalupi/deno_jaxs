@@ -21,6 +21,15 @@ export default class TextTemplate implements Template {
     return other.constructor === TextTemplate;
   }
 
+  update(template: Template, _renderKit: RenderKit) {
+    if (this.dom.length !== 1) return this.dom;
+
+    const dom = this.dom[0];
+    this.value = (template as TextTemplate).value;
+    dom.textContent = this.value;
+    return this.dom;
+  }
+
   replaceDom(dom: TemplateDomCollection) {
     this.dom[0].replaceWith(dom[0]);
     let lastElement = dom[0];
